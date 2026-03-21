@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MISTERY BOX GENG4D - EXCLUSIVE</title>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <style>
+        :root {
+            --gold: linear-gradient(to bottom, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            --red-angpau: linear-gradient(135deg, #ff0000 0%, #8b0000 100%);
+            --neon-border: #00f2ff;
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(circle, #3d0000 0%, #000 100%);
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            color: white;
+        }
+
+        /* Tirai & Background Animation */
+        .stage {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: url('https://www.transparenttextures.com');
+        }
+
+        /* Judul 3D GENG4D */
+        .header-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .title-mistery {
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255,215,0,0.5);
+        }
+        .title-geng4d {
+            font-size: 3.5rem;
+            background: var(--gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(4px 4px 0px #4d3300); /* Efek 3D */
+            margin-top: -10px;
+        }
+
+        /* Angpau Modern & Presisi */
+        .angpau-wrapper {
+            position: relative;
+            perspective: 1000px;
+            margin-bottom: 30px;
+        }
+        .angpau {
+            width: 220px;
+            height: 320px;
+            background: var(--red-angpau);
+            border-radius: 20px;
+            border: 3px solid #ffd700;
+            box-shadow: 0 20px 50px rgba(255,0,0,0.4), inset 0 0 20px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Koin Gantung */
+        .coin-hang {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: var(--gold);
+            border-radius: 50%;
+            border: 2px solid #554000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: #4d3300;
+            z-index: 5;
+        }
+
+        /* Logo Geng4D di Tengah Angpau */
+        .angpau-logo {
+            width: 130px;
+            height: 130px;
+            border: 4px double #ffd700;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.1);
+        }
+        .chinese-char { font-size: 50px; color: #ffd700; margin-bottom: -10px; }
+        .text-4d { font-size: 25px; font-weight: 900; color: #ffd700; }
+
+        /* Kado-kado Kecil Mewah */
+        .gift-row {
+            display: flex;
+            gap: 15px;
+            margin-top: -10px;
+            z-index: 2;
+        }
+        .gift {
+            width: 50px;
+            height: 50px;
+            background: var(--gold);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+            position: relative;
+        }
+        .gift::before { content: ''; position: absolute; width: 100%; height: 5px; background: red; top: 50%; }
+        .gift::after { content: ''; position: absolute; height: 100%; width: 5px; background: red; left: 50%; }
+
+        /* Input & Tombol Neon */
+        .input-box {
+            width: 250px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid var(--neon-border);
+            border-radius: 30px;
+            padding: 10px 20px;
+            color: #fff;
+            text-align: center;
+            margin-top: 40px;
+            font-size: 1rem;
+            outline: none;
+            box-shadow: 0 0 10px var(--neon-border);
+        }
+
+        .btn-buka {
+            width: 180px; /* Ukuran dikecilkan sesuai request */
+            padding: 10px;
+            margin-top: 20px;
+            background: transparent;
+            border: 2px solid var(--neon-border);
+            color: var(--neon-border);
+            font-weight: 900;
+            letter-spacing: 2px;
+            border-radius: 50px;
+            cursor: pointer;
+            text-shadow: 0 0 10px var(--neon-border);
+            box-shadow: 0 0 15px var(--neon-border), inset 0 0 5px var(--neon-border);
+            transition: 0.3s;
+        }
+        .btn-buka:hover {
+            background: var(--neon-border);
+            color: #000;
+            box-shadow: 0 0 40px var(--neon-border);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stage">
+        <div class="header-title">
+            <div class="title-mistery">MISTERY BOX</div>
+            <div class="title-geng4d">GENG4D</div>
+        </div>
+
+        <div class="angpau-wrapper">
+            <div class="coin-hang">¥</div>
+            <div class="angpau">
+                <div class="angpau-logo">
+                    <div class="chinese-char">庚</div>
+                    <div class="text-4d">4D</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="gift-row">
+            <div class="gift"></div>
+            <div class="gift" style="transform: scale(1.2);"></div>
+            <div class="gift"></div>
+        </div>
+
+        <input type="text" class="input-box" placeholder="MASUKKAN KODE">
+        <button class="btn-buka" onclick="claimReward()">BUKA</button>
+    </div>
+
+    <script>
+        function claimReward() {
+            // Animasi getar saat klik
+            const angpau = document.querySelector('.angpau');
+            angpau.style.animation = 'none';
+            angpau.offsetHeight; 
+            angpau.style.animation = 'float 0.5s infinite';
+            
+            setTimeout(() => {
+                alert("Selamat! Menghubungkan ke Admin Panel...");
+                // Logika gacha di sini
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
