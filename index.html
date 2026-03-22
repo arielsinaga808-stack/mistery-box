@@ -3,216 +3,240 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MISTERY BOX GENG4D PRO</title>
+<title>GENG4D GOD BOX</title>
 
-<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-<!-- SOUND -->
 <audio id="winSound" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3"></audio>
 <audio id="loseSound" src="https://assets.mixkit.co/sfx/preview/mixkit-losing-bleeps-2026.mp3"></audio>
 
 <style>
-body {
+body{
     margin:0;
-    background:black;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
+    background:radial-gradient(circle,#3b0000,#000);
+    overflow:hidden;
     font-family:sans-serif;
     color:white;
-    overflow:hidden;
 }
 
-/* NEON EFFECT */
-.neon {
-    color:#00f2ff;
-    text-shadow:0 0 10px #00f2ff,0 0 20px #00f2ff;
+/* PETIR */
+.flash{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:white;
+    opacity:0;
+    pointer-events:none;
+    animation:flash 5s infinite;
+}
+@keyframes flash{
+    0%,95%,100%{opacity:0;}
+    96%{opacity:0.8;}
 }
 
-/* BOX 3D */
-.scene {
-    perspective:1000px;
-}
-
-.box3d {
-    width:200px;
-    height:200px;
-    position:relative;
-    transform-style:preserve-3d;
-    transition:1s;
-}
-
-.box3d.open {
-    transform:rotateX(-120deg);
-}
-
-/* BOX STYLE */
-.box-face {
+/* GRID HADIAH */
+.grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
     position:absolute;
     width:100%;
     height:100%;
+    padding:20px;
+    box-sizing:border-box;
+}
+
+.small-box{
     background:linear-gradient(135deg,#ff0000,#800000);
-    border:3px solid gold;
+    border:2px solid gold;
+    border-radius:10px;
+    box-shadow:0 0 10px red;
+    animation:float 3s infinite ease-in-out;
+}
+
+@keyframes float{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-10px);}
+}
+
+/* BOX UTAMA */
+.center{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    text-align:center;
+}
+
+.big-box{
+    width:180px;
+    height:180px;
+    background:linear-gradient(135deg,#ff0000,#800000);
+    border:4px solid gold;
+    border-radius:20px;
     display:flex;
     justify-content:center;
     align-items:center;
-    font-weight:bold;
+    font-size:40px;
+    box-shadow:0 0 30px red,0 0 60px gold;
+    animation:bounce 2s infinite;
 }
 
-/* COIN */
-.coin {
-    position:absolute;
-    width:20px;
-    height:20px;
-    background:gold;
-    border-radius:50%;
-    animation:fall 3s linear infinite;
-}
-
-@keyframes fall {
-    0%{transform:translateY(-100vh);}
-    100%{transform:translateY(100vh);}
-}
-
-/* RESULT */
-#resultImg {
-    width:200px;
-    display:none;
-    margin-top:20px;
-    animation:zoom 0.5s ease;
-}
-
-@keyframes zoom {
-    from{transform:scale(0);}
-    to{transform:scale(1);}
+@keyframes bounce{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-20px);}
 }
 
 /* INPUT */
-input {
+input{
     margin-top:20px;
-    padding:10px;
+    padding:12px;
+    width:220px;
     border-radius:20px;
     border:2px solid cyan;
     background:black;
     color:white;
     text-align:center;
+    box-shadow:0 0 10px cyan;
 }
 
 /* BUTTON */
-button {
+button{
     margin-top:10px;
-    padding:10px 20px;
+    padding:12px 20px;
     border-radius:30px;
     border:2px solid cyan;
     background:black;
     color:cyan;
     cursor:pointer;
+    box-shadow:0 0 15px cyan;
 }
-button:hover {
+button:hover{
     background:cyan;
     color:black;
+}
+
+/* RESULT */
+#resultImg{
+    width:200px;
+    display:none;
+    margin-top:15px;
+    animation:zoom 0.5s;
+}
+@keyframes zoom{
+    from{transform:scale(0);}
+    to{transform:scale(1);}
+}
+
+/* COIN */
+.coin{
+    position:absolute;
+    width:15px;
+    height:15px;
+    background:gold;
+    border-radius:50%;
+    animation:fall linear infinite;
+}
+@keyframes fall{
+    from{transform:translateY(-100vh);}
+    to{transform:translateY(100vh);}
 }
 </style>
 </head>
 
 <body>
 
-<div style="text-align:center">
+<div class="flash"></div>
 
-<h1 class="neon">🎁 GENG4D MISTERY BOX</h1>
-
-<div class="scene">
-    <div class="box3d" id="box">
-        <div class="box-face">🎁</div>
-    </div>
+<!-- GRID HADIAH -->
+<div class="grid">
+<script>
+for(let i=0;i<9;i++){
+    document.write('<div class="small-box"></div>');
+}
+</script>
 </div>
 
-<img id="resultImg">
-
-<br>
-<input type="text" id="kodeInput" placeholder="MASUKKAN KODE">
-<br>
-<button onclick="claim()">BUKA BOX</button>
-
+<!-- BOX UTAMA -->
+<div class="center">
+    <div class="big-box" id="box">🎁</div>
+    <br>
+    <input id="kodeInput" placeholder="MASUKKAN KODE">
+    <br>
+    <button onclick="claim()">BUKA SEKARANG</button>
+    <img id="resultImg">
 </div>
 
 <script>
-// FIREBASE CONFIG
-const firebaseConfig = {
-    apiKey: "AIzaSyDZH--oPWAhe3JhrPdWiAkkAecZFjefhV0",
-    authDomain: "geng4d-mistery.firebaseapp.com",
-    databaseURL: "https://geng4d-mistery-default-rtdb.asia-southeast1.firebasedatabase.app/",
-    projectId: "geng4d-mistery"
+// FIREBASE
+const config={
+ apiKey:"AIzaSyDZH--oPWAhe3JhrPdWiAkkAecZFjefhV0",
+ databaseURL:"https://geng4d-mistery-default-rtdb.asia-southeast1.firebasedatabase.app/"
 };
+firebase.initializeApp(config);
+const db=firebase.database();
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-// GENERATE COIN ANIMATION
-for(let i=0;i<20;i++){
-    let c = document.createElement("div");
-    c.className="coin";
-    c.style.left = Math.random()*100+"%";
-    c.style.animationDuration = (Math.random()*3+2)+"s";
-    document.body.appendChild(c);
+// COIN
+for(let i=0;i<30;i++){
+ let c=document.createElement("div");
+ c.className="coin";
+ c.style.left=Math.random()*100+"%";
+ c.style.animationDuration=(Math.random()*3+2)+"s";
+ document.body.appendChild(c);
 }
 
-// CLAIM FUNCTION
+// CLAIM
 function claim(){
-    const code = document.getElementById('kodeInput').value.toUpperCase().trim();
-    if(!code) return alert("Masukkan kode!");
+ let code=kodeInput.value.toUpperCase().trim();
+ if(!code) return alert("Masukkan kode!");
 
-    const box = document.getElementById('box');
-    const img = document.getElementById('resultImg');
+ db.ref('settings/codes/'+code).once('value')
+ .then(snap=>{
+  let data=snap.val();
 
-    db.ref('settings/codes/'+code).once('value')
-    .then(snap=>{
-        const data = snap.val();
+  if(!data) return alert("Kode tidak valid!");
+  if(data.used) return alert("Kode sudah dipakai!");
 
-        if(!data) return alert("Kode tidak valid!");
-        if(data.used) return alert("Kode sudah dipakai!");
+  db.ref('settings/winrate').once('value')
+  .then(wrSnap=>{
+    let wr=wrSnap.val()||100;
+    let rand=Math.floor(Math.random()*100)+1;
 
-        db.ref('settings/winrate').once('value')
-        .then(wrSnap=>{
-            const wr = wrSnap.val()||100;
-            const rand = Math.floor(Math.random()*100)+1;
+    box.style.transform="scale(1.2) rotate(10deg)";
 
-            box.classList.add("open");
+    setTimeout(()=>{
 
-            setTimeout(()=>{
+        if(rand<=wr){
+            winSound.play();
 
-                if(rand <= wr){
-                    document.getElementById("winSound").play();
+            let p=data.prize.toLowerCase();
 
-                    // DETEKSI HADIAH
-                    let prize = data.prize.toLowerCase();
+            if(p.includes("mobil")){
+                resultImg.src="https://cdn-icons-png.flaticon.com/512/743/743922.png";
+            }else if(p.includes("uang")){
+                resultImg.src="https://cdn-icons-png.flaticon.com/512/2331/2331941.png";
+            }else{
+                resultImg.src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png";
+            }
 
-                    if(prize.includes("mobil")){
-                        img.src="https://cdn-icons-png.flaticon.com/512/743/743922.png";
-                    } else if(prize.includes("uang")){
-                        img.src="https://cdn-icons-png.flaticon.com/512/2331/2331941.png";
-                    } else {
-                        img.src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png";
-                    }
+            resultImg.style.display="block";
+            alert("🎉 MENANG: "+data.prize);
 
-                    img.style.display="block";
-                    alert("🎉 MENANG: "+data.prize);
+        }else{
+            loseSound.play();
+            alert("💣 ZONK!");
+        }
 
-                } else {
-                    document.getElementById("loseSound").play();
-                    alert("💣 ZONK!");
-                }
+        db.ref('settings/codes/'+code).update({used:true});
 
-                db.ref('settings/codes/'+code).update({used:true});
+        box.style.transform="";
 
-            },1000);
+    },800);
 
-        });
+  });
 
-    });
+ });
 }
 </script>
 
