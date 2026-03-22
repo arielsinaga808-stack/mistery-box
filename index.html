@@ -3,53 +3,114 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MISTERY BOX GENG4D</title>
+<title>MISTERY BOX GENG4D PRO</title>
 
-<!-- ✅ FIREBASE SDK (FIX PENTING) -->
+<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+<!-- SOUND -->
+<audio id="winSound" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3"></audio>
+<audio id="loseSound" src="https://assets.mixkit.co/sfx/preview/mixkit-losing-bleeps-2026.mp3"></audio>
 
 <style>
 body {
     margin:0;
-    background: radial-gradient(circle,#3d0000,#000);
-    font-family: 'Montserrat', sans-serif;
+    background:black;
     display:flex;
     justify-content:center;
     align-items:center;
     height:100vh;
+    font-family:sans-serif;
     color:white;
+    overflow:hidden;
 }
 
-.box {
-    text-align:center;
+/* NEON EFFECT */
+.neon {
+    color:#00f2ff;
+    text-shadow:0 0 10px #00f2ff,0 0 20px #00f2ff;
 }
 
+/* BOX 3D */
+.scene {
+    perspective:1000px;
+}
+
+.box3d {
+    width:200px;
+    height:200px;
+    position:relative;
+    transform-style:preserve-3d;
+    transition:1s;
+}
+
+.box3d.open {
+    transform:rotateX(-120deg);
+}
+
+/* BOX STYLE */
+.box-face {
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:linear-gradient(135deg,#ff0000,#800000);
+    border:3px solid gold;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-weight:bold;
+}
+
+/* COIN */
+.coin {
+    position:absolute;
+    width:20px;
+    height:20px;
+    background:gold;
+    border-radius:50%;
+    animation:fall 3s linear infinite;
+}
+
+@keyframes fall {
+    0%{transform:translateY(-100vh);}
+    100%{transform:translateY(100vh);}
+}
+
+/* RESULT */
+#resultImg {
+    width:200px;
+    display:none;
+    margin-top:20px;
+    animation:zoom 0.5s ease;
+}
+
+@keyframes zoom {
+    from{transform:scale(0);}
+    to{transform:scale(1);}
+}
+
+/* INPUT */
 input {
-    padding:12px;
-    width:250px;
+    margin-top:20px;
+    padding:10px;
     border-radius:20px;
     border:2px solid cyan;
-    background:#000;
-    color:#fff;
+    background:black;
+    color:white;
     text-align:center;
-    font-weight:bold;
-    margin-top:20px;
 }
 
+/* BUTTON */
 button {
-    margin-top:15px;
-    padding:12px 20px;
+    margin-top:10px;
+    padding:10px 20px;
     border-radius:30px;
     border:2px solid cyan;
-    background:transparent;
+    background:black;
     color:cyan;
-    font-weight:bold;
     cursor:pointer;
 }
-
 button:hover {
     background:cyan;
     color:black;
@@ -59,15 +120,27 @@ button:hover {
 
 <body>
 
-<div class="box">
-    <h1>🎁 MISTERY BOX GENG4D</h1>
-    <input type="text" id="kodeInput" placeholder="MASUKKAN KODE">
-    <br>
-    <button onclick="claimReward()">BUKA SEKARANG</button>
+<div style="text-align:center">
+
+<h1 class="neon">🎁 GENG4D MISTERY BOX</h1>
+
+<div class="scene">
+    <div class="box3d" id="box">
+        <div class="box-face">🎁</div>
+    </div>
+</div>
+
+<img id="resultImg">
+
+<br>
+<input type="text" id="kodeInput" placeholder="MASUKKAN KODE">
+<br>
+<button onclick="claim()">BUKA BOX</button>
+
 </div>
 
 <script>
-// ✅ CONFIG FIREBASE (FIX)
+// FIREBASE CONFIG
 const firebaseConfig = {
     apiKey: "AIzaSyDZH--oPWAhe3JhrPdWiAkkAecZFjefhV0",
     authDomain: "geng4d-mistery.firebaseapp.com",
@@ -75,76 +148,70 @@ const firebaseConfig = {
     projectId: "geng4d-mistery"
 };
 
-// ✅ INIT
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// ✅ AUTO LOAD BACKGROUND
-db.ref('settings/background').on('value', (snap)=>{
-    const bg = snap.val();
-    console.log("BG:", bg);
+// GENERATE COIN ANIMATION
+for(let i=0;i<20;i++){
+    let c = document.createElement("div");
+    c.className="coin";
+    c.style.left = Math.random()*100+"%";
+    c.style.animationDuration = (Math.random()*3+2)+"s";
+    document.body.appendChild(c);
+}
 
-    if(bg && bg.trim() !== ""){
-        document.body.style.backgroundImage = `url('${bg}')`;
-    }
-});
+// CLAIM FUNCTION
+function claim(){
+    const code = document.getElementById('kodeInput').value.toUpperCase().trim();
+    if(!code) return alert("Masukkan kode!");
 
-// ✅ CLAIM FUNCTION (SUDAH FIX TOTAL)
-function claimReward(){
-    const input = document.getElementById('kodeInput');
-    const code = input.value.toUpperCase().trim();
+    const box = document.getElementById('box');
+    const img = document.getElementById('resultImg');
 
-    console.log("INPUT:", code);
+    db.ref('settings/codes/'+code).once('value')
+    .then(snap=>{
+        const data = snap.val();
 
-    if(!code){
-        alert("Masukkan kode!");
-        return;
-    }
+        if(!data) return alert("Kode tidak valid!");
+        if(data.used) return alert("Kode sudah dipakai!");
 
-    db.ref('settings/codes/' + code).once('value')
-    .then(snapshot => {
-
-        const data = snapshot.val();
-        console.log("DATA:", data);
-
-        if(!data){
-            alert("❌ KODE TIDAK VALID!");
-            return;
-        }
-
-        if(data.used){
-            alert("⚠️ KODE SUDAH DIGUNAKAN!");
-            return;
-        }
-
-        // ambil winrate
         db.ref('settings/winrate').once('value')
-        .then(wrSnap => {
+        .then(wrSnap=>{
+            const wr = wrSnap.val()||100;
+            const rand = Math.floor(Math.random()*100)+1;
 
-            const winrate = wrSnap.val() || 100;
-            const random = Math.floor(Math.random()*100)+1;
+            box.classList.add("open");
 
-            console.log("WR:", winrate, "RAND:", random);
+            setTimeout(()=>{
 
-            if(random <= winrate){
-                alert("🎉 SELAMAT! ANDA MENANG:\n" + data.prize);
-            } else {
-                alert("💣 ZONK! COBA LAGI!");
-            }
+                if(rand <= wr){
+                    document.getElementById("winSound").play();
 
-            // tandai sudah dipakai
-            db.ref('settings/codes/' + code).update({
-                used: true
-            });
+                    // DETEKSI HADIAH
+                    let prize = data.prize.toLowerCase();
 
-            input.value = "";
+                    if(prize.includes("mobil")){
+                        img.src="https://cdn-icons-png.flaticon.com/512/743/743922.png";
+                    } else if(prize.includes("uang")){
+                        img.src="https://cdn-icons-png.flaticon.com/512/2331/2331941.png";
+                    } else {
+                        img.src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png";
+                    }
+
+                    img.style.display="block";
+                    alert("🎉 MENANG: "+data.prize);
+
+                } else {
+                    document.getElementById("loseSound").play();
+                    alert("💣 ZONK!");
+                }
+
+                db.ref('settings/codes/'+code).update({used:true});
+
+            },1000);
 
         });
 
-    })
-    .catch(err=>{
-        console.error(err);
-        alert("❌ ERROR: "+err.message);
     });
 }
 </script>
