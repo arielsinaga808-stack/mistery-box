@@ -3,158 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SECURE ADMIN PANEL - GENG4D</title>
+    <title>MISTERY BOX GENG4D - EXCLUSIVE</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        body { background: #0a0a0a; color: white; font-family: 'Montserrat', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
-        #loginBox { width: 100%; max-width: 350px; background: #111; padding: 30px; border-radius: 15px; border: 1px solid #ffd700; text-align: center; box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
-        #adminPanel { display: none; width: 100%; max-width: 450px; background: #111; padding: 20px; border-radius: 15px; border: 1px solid #333; }
-        h2 { color: #ffd700; margin-bottom: 20px; }
-        .input-group { margin-bottom: 15px; text-align: left; }
-        label { display: block; margin-bottom: 5px; font-size: 13px; color: #888; }
-        input { width: 100%; padding: 12px; background: #222; border: 1px solid #444; border-radius: 8px; color: white; box-sizing: border-box; outline: none; margin-bottom: 5px; }
-        input:focus { border-color: #ffd700; }
-        button { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .btn-login { background: #ffd700; color: black; font-size: 16px; }
-        .btn-save { background: #00f2ff; color: black; margin-top: 20px; }
-        .btn-logout { background: #ff4444; color: white; margin-top: 30px; font-size: 12px; width: auto; padding: 8px 15px; border-radius: 5px; }
-        .code-list { margin-top: 20px; max-height: 300px; overflow-y: auto; padding-right: 5px; }
-        .code-item { background: #1a1a1a; padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #ffd700; }
-        .status-active { color: #0f0; font-size: 12px; font-weight: bold; }
-        .status-used { color: #ff4444; font-size: 12px; font-weight: bold; }
-        .btn-del { background: none; border: none; color: #666; cursor: pointer; font-size: 18px; width: auto; padding: 0; margin: 0; }
-        .btn-del:hover { color: red; }
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        :root { --gold: linear-gradient(to bottom, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); --red-angpau: linear-gradient(135deg, #ff0000 0%, #8b0000 100%); --neon-border: #00f2ff; }
+        body { margin: 0; background: radial-gradient(circle, #3d0000 0%, #000 100%); background-size: cover; background-position: center; font-family: 'Montserrat', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; color: white; transition: 0.5s; }
+        .stage { position: relative; width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; }
+        .title-mistery { font-size: 1.2rem; letter-spacing: 5px; color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.5); }
+        .title-geng4d { font-size: 3.5rem; background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(4px 4px 0px #4d3300); margin-top: -10px; }
+        .angpau { width: 200px; height: 280px; background: var(--red-angpau); border-radius: 20px; border: 3px solid #ffd700; box-shadow: 0 20px 50px rgba(255,0,0,0.4); display: flex; align-items: center; justify-content: center; animation: float 3s ease-in-out infinite; position: relative; }
+        .angpau-logo { width: 110px; height: 110px; border: 4px double #ffd700; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .input-box { width: 250px; background: rgba(0,0,0,0.8); border: 2px solid var(--neon-border); border-radius: 30px; padding: 12px; color: #fff; text-align: center; margin-top: 30px; outline: none; box-shadow: 0 0 15px var(--neon-border); font-weight: bold; }
+        .btn-buka { width: 180px; padding: 12px; margin-top: 15px; background: transparent; border: 2px solid var(--neon-border); color: var(--neon-border); font-weight: 900; border-radius: 50px; cursor: pointer; transition: 0.3s; }
+        .btn-buka:hover { background: var(--neon-border); color: #000; box-shadow: 0 0 30px var(--neon-border); }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
     </style>
 </head>
 <body>
 
-    <div id="loginBox">
-        <div style="font-size: 40px; margin-bottom: 10px;">🔐</div>
-        <h2>ADMIN LOGIN</h2>
-        <div class="input-group">
-            <input type="text" id="user" placeholder="Username">
-            <input type="password" id="pass" placeholder="Password">
-        </div>
-        <button class="btn-login" onclick="handleLogin()">MASUK SYSTEM</button>
+    <div class="stage">
+        <div class="title-mistery">MISTERY BOX</div>
+        <div class="title-geng4d">GENG4D</div>
+        <div class="angpau"><div class="angpau-logo"><div style="font-size:40px; color:#ffd700">庚</div><div style="color:#ffd700; font-weight:900">4D</div></div></div>
+        <input type="text" class="input-box" id="kodeInput" placeholder="MASUKKAN KODE">
+        <button class="btn-buka" onclick="claimReward()">BUKA SEKARANG</button>
     </div>
 
-    <div id="adminPanel">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h2 style="margin: 0; font-size: 18px;">GENG4D PANEL</h2>
-            <button class="btn-logout" onclick="location.reload()">LOGOUT</button>
-        </div>
-        <hr style="border: 0.5px solid #333; margin: 20px 0;">
-
-        <!-- SETTING BACKGROUND & WINRATE -->
-        <div class="input-group">
-            <label>URL Gambar Background</label>
-            <input type="text" id="bgUrl" placeholder="https://link-gambar.com">
-            
-            <label style="margin-top:10px">Winrate Hadiah (1-100%)</label>
-            <input type="number" id="winRate" placeholder="Contoh: 50" min="1" max="100">
-        </div>
-        <button class="btn-save" onclick="updateSettings()">UPDATE SETTINGS</button>
-
-        <hr style="border: 0.5px solid #333; margin: 30px 0;">
-
-        <!-- MANAJEMEN KODE -->
-        <h3>KODE & HADIAH</h3>
-        <div class="input-group">
-            <input type="text" id="newCode" placeholder="KODE (Contoh: GENG100)" style="text-transform: uppercase;">
-            <input type="text" id="newPrize" placeholder="NAMA HADIAH (Contoh: SALDO 50K)">
-            <button onclick="saveCode()" style="background: #ffd700; color: black; margin-top: 10px;">TAMBAHKAN KODE</button>
-        </div>
-
-        <div id="codeList" class="code-list"></div>
-    </div>
-
-    <!-- SDK FIREBASE VERSI 8 (STABLE) -->
+    <!-- FIREBASE SDK -->
     <script src="https://www.gstatic.com"></script>
     <script src="https://www.gstatic.com"></script>
 
     <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyDZH--oPWAhe3JhrPdWiAkkAecZFjefhV0",
-            authDomain: "geng4d-mistery.firebaseapp.com",
-            databaseURL: "https://geng4d-mistery-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "geng4d-mistery",
-            storageBucket: "geng4d-mistery.firebasestorage.app",
-            messagingSenderId: "1084140719254",
-            appId: "1:1084140719254:web:88c9ee556a5cdc63f606b7"
+            databaseURL: "https://geng4d-mistery-default-rtdb.asia-southeast1.firebasedatabase.app"
         };
-
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        function handleLogin() {
-            const u = document.getElementById('user').value;
-            const p = document.getElementById('pass').value;
-            if(u === "admin" && p === "admin123") {
-                document.getElementById('loginBox').style.display = 'none';
-                document.getElementById('adminPanel').style.display = 'block';
-                loadData();
-            } else { alert("Login Gagal!"); }
-        }
+        // 1. UPDATE BACKGROUND OTOMATIS DARI PANEL
+        db.ref('settings/background').on('value', (s) => {
+            if(s.val()) document.body.style.backgroundImage = `url('${s.val()}')`;
+        });
 
-        function loadData() {
-            // Load Background & Winrate
-            db.ref('settings').on('value', (snapshot) => {
-                const data = snapshot.val();
-                if(data) {
-                    document.getElementById('bgUrl').value = data.background || "";
-                    document.getElementById('winRate').value = data.winrate || 100;
-                    renderCodes(data.codes);
+        // 2. LOGIKA KLAIM HADIAH & WINRATE
+        function claimReward() {
+            const code = document.getElementById('kodeInput').value.toUpperCase().trim();
+            if(!code) return alert("Masukkan Kode!");
+
+            db.ref('settings/codes/' + code).once('value').then((snap) => {
+                const data = snap.val();
+                if (data) {
+                    if (data.used) return alert("KODE SUDAH PERNAH DIGUNAKAN!");
+
+                    // Ambil Winrate dari Panel
+                    db.ref('settings/winrate').once('value').then((wrSnap) => {
+                        const wr = wrSnap.val() || 100;
+                        const random = Math.floor(Math.random() * 100) + 1;
+
+                        if (random <= wr) {
+                            alert("SELAMAT! ANDA MENANG: " + data.prize);
+                        } else {
+                            alert("ZONK! COBA LAGI LAIN KALI.");
+                        }
+                        // Update status kode jadi terpakai
+                        db.ref('settings/codes/' + code).update({ used: true });
+                    });
+                } else {
+                    alert("KODE SALAH!");
                 }
             });
         }
-
-        function updateSettings() {
-            const bg = document.getElementById('bgUrl').value;
-            const wr = document.getElementById('winRate').value;
-            db.ref('settings').update({ 
-                background: bg,
-                winrate: wr 
-            }).then(() => alert("Settings Berhasil Diupdate!"));
-        }
-
-        function saveCode() {
-            const code = document.getElementById('newCode').value.toUpperCase().trim();
-            const prize = document.getElementById('newPrize').value.trim();
-            if(!code || !prize) return alert("Lengkapi data!");
-
-            db.ref('settings/codes/' + code).set({
-                code: code,
-                prize: prize,
-                used: false,
-                createdAt: new Date().toLocaleString()
-            }).then(() => {
-                document.getElementById('newCode').value = "";
-                document.getElementById('newPrize').value = "";
-                alert("Kode Berhasil Ditambahkan!");
-            });
-        }
-
-        function renderCodes(codes) {
-            const container = document.getElementById('codeList');
-            container.innerHTML = "";
-            if(!codes) return;
-            Object.keys(codes).reverse().forEach(key => {
-                const item = codes[key];
-                container.innerHTML += `
-                    <div class="code-item">
-                        <div style="flex:1">
-                            <div style="font-weight: bold; color:#ffd700">${item.code}</div>
-                            <div style="font-size: 11px;">Hadiah: ${item.prize}</div>
-                            <span class="${item.used ? 'status-used' : 'status-active'}">${item.used ? '● TERPAKAI' : '● TERSEDIA'}</span>
-                        </div>
-                        <button class="btn-del" onclick="deleteCode('${key}')">🗑️</button>
-                    </div>`;
-            });
-        }
-
-        function deleteCode(key) { if(confirm("Hapus kode ini?")) db.ref('settings/codes/' + key).remove(); }
     </script>
 </body>
 </html>
