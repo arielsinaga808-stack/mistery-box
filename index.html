@@ -15,6 +15,8 @@
         body {
             margin: 0;
             background: radial-gradient(circle, #3d0000 0%, #000 100%);
+            background-size: cover;
+            background-position: center;
             font-family: 'Montserrat', sans-serif;
             display: flex;
             justify-content: center;
@@ -34,7 +36,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: url('https://www.transparenttextures.com');
+            background: transparent;
         }
 
         /* Judul 3D GENG4D */
@@ -146,7 +148,7 @@
         }
 
         .btn-buka {
-            width: 180px; /* Ukuran dikecilkan sesuai request */
+            width: 180px; 
             padding: 10px;
             margin-top: 20px;
             background: transparent;
@@ -196,22 +198,86 @@
             <div class="gift"></div>
         </div>
 
-        <input type="text" class="input-box" placeholder="MASUKKAN KODE">
-        <button class="btn-buka" onclick="claimReward()">BUKA</button>
+        <input type="text" class="input-box" id="kodeInput" placeholder="MASUKKAN KODE">
+        <button class="btn-buka" id="btnBuka" onclick="claimReward()">BUKA</button>
     </div>
 
+    <!-- LOAD FIREBASE SDK -->
+    <script src="https://www.gstatic.com"></script>
+    <script src="https://www.gstatic.com"></script>
+
     <script>
+        // Konfigurasi Firebase (Harus sama dengan Admin Panel)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDZH--oPWAhe3JhrPdWiAkkAecZFjefhV0",
+            authDomain: "geng4d-mistery.firebaseapp.com",
+            databaseURL: "https://geng4d-mistery-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "geng4d-mistery",
+            storageBucket: "geng4d-mistery.firebasestorage.app",
+            messagingSenderId: "1084140719254",
+            appId: "1:1084140719254:web:88c9ee556a5cdc63f606b7"
+        };
+
+        // Inisialisasi Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.database();
+
+        // 1. Ambil Setting Background dari Panel secara Otomatis
+        db.ref('settings/background').on('value', (snapshot) => {
+            const url = snapshot.val();
+            if(url && url.trim() !== "") {
+                document.body.style.backgroundImage = `url('${url}')`;
+            }
+        });
+
         function claimReward() {
-            // Animasi getar saat klik
+            const inputVal = document.getElementById('kodeInput').value.toUpperCase().trim();
             const angpau = document.querySelector('.angpau');
-            angpau.style.animation = 'none';
-            angpau.offsetHeight; 
-            angpau.style.animation = 'float 0.5s infinite';
-            
-            setTimeout(() => {
-                alert("Selamat! Menghubungkan ke Admin Panel...");
-                // Logika gacha di sini
-            }, 1000);
+            const btn = document.getElementById('btnBuka');
+
+            if (inputVal === "") {
+                alert("Silakan masukkan kode!");
+                return;
+            }
+
+            // Animasi Loading
+            btn.innerText = "PROSES...";
+            btn.disabled = true;
+            angpau.style.animation = 'float 0.3s infinite';
+
+            // 2. Cek Kode ke Firebase
+            db.ref('settings/codes/' + inputVal).once('value')
+            .then((snapshot) => {
+                const data = snapshot.val();
+
+                setTimeout(() => {
+                    if (data) {
+                        if (data.used) {
+                            alert("MAAF, KODE INI SUDAH PERNAH DIGUNAKAN!");
+                        } else {
+                            // Berhasil! Tandai sebagai sudah dipakai
+                            db.ref('settings/codes/' + inputVal).update({ used: true });
+                            alert("SELAMAT! KODE BERHASIL DIKLAIM.\nSilakan hubungi admin untuk hadiah Anda.");
+                        }
+                    } else {
+                        alert("KODE TIDAK VALID ATAU SALAH!");
+                    }
+
+                    // Reset Tombol & Animasi
+                    btn.innerText = "BUKA";
+                    btn.disabled = false;
+                    angpau.style.animation = 'float 3s ease-in-out infinite';
+                    document.getElementById('kodeInput').value = "";
+                }, 1500);
+            })
+            .catch((error) => {
+                alert("Terjadi masalah koneksi ke server.");
+                console.error(error);
+                btn.innerText = "BUKA";
+                btn.disabled = false;
+            });
         }
     </script>
 </body>
