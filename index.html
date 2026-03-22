@@ -21,6 +21,7 @@
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
+    transition: background 0.5s ease;
   }
 
   h1 {
@@ -326,6 +327,16 @@
   document.addEventListener('keydown', e => {
     if(e.key === 'Escape') {
       resultPopup.classList.remove('show');
+    }
+  });
+
+  // --- Tambahan fitur update background realtime dari admin panel ---
+  db.ref('settings/background').on('value', snapshot => {
+    const bgUrl = snapshot.val();
+    if (bgUrl) {
+      document.body.style.background = `radial-gradient(circle at center, #1a1a2e 0%, #000 80%), url(${bgUrl}) center/cover no-repeat`;
+    } else {
+      document.body.style.background = 'radial-gradient(circle at center, #1a1a2e 0%, #000 80%)';
     }
   });
 </script>
