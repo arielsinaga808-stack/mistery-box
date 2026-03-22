@@ -233,14 +233,31 @@
         });
 
         function claimReward() {
-            const inputVal = document.getElementById('kodeInput').value.toUpperCase().trim();
-            const angpau = document.querySelector('.angpau');
-            const btn = document.getElementById('btnBuka');
+    const inputVal = document.getElementById('kodeInput').value.toUpperCase().trim();
+    const angpau = document.querySelector('.angpau');
 
-            if (inputVal === "") {
-                alert("Silakan masukkan kode!");
-                return;
+    if (inputVal === "") return alert("Masukkan Kode!");
+
+    // Proses Cek ke Database
+    db.ref('settings/codes/' + inputVal).once('value').then((snapshot) => {
+        const data = snapshot.val();
+
+        if (data) {
+            if (data.used) {
+                alert("MAAF, KODE SUDAH PERNAH DIGUNAKAN!");
+            } else {
+                // TAMPILKAN HADIAH YANG ANDA INPUT DI PANEL
+                alert("SELAMAT!\nAnda Mendapatkan: " + data.prize); 
+                
+                // Tandai sebagai sudah dipakai
+                db.ref('settings/codes/' + inputVal).update({ used: true });
             }
+        } else {
+            alert("KODE SALAH!");
+        }
+        document.getElementById('kodeInput').value = "";
+    });
+}
 
             // Animasi Loading
             btn.innerText = "PROSES...";
