@@ -4,62 +4,162 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MISTERY BOX GENG4D - EXCLUSIVE</title>
+    
+    <!-- LINK SAKTI: SDK FIREBASE LENGKAP (AGAR SISTEM JALAN) -->
     <script src="https://www.gstatic.com"></script>
     <script src="https://www.gstatic.com"></script>
+
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --gold: linear-gradient(to bottom, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); --red-angpau: linear-gradient(135deg, #ff0000 0%, #8b0000 100%); --neon: #00f2ff; }
-        body { margin: 0; background: radial-gradient(circle, #3d0000 0%, #000 100%); font-family: 'Montserrat', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; color: white; transition: 0.5s; background-size: cover; }
-        .stage { text-align: center; width: 100%; max-width: 500px; }
-        .title-mistery { font-size: 1.2rem; letter-spacing: 5px; color: #ffd700; }
+        :root {
+            --gold: linear-gradient(to bottom, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            --red-angpau: linear-gradient(135deg, #ff0000 0%, #8b0000 100%);
+            --neon-border: #00f2ff;
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(circle, #3d0000 0%, #000 100%);
+            background-size: cover;
+            background-position: center;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            color: white;
+        }
+
+        .stage {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-title { text-align: center; margin-bottom: 20px; }
+        .title-mistery { font-size: 1.2rem; letter-spacing: 5px; color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.5); font-weight: 700; }
         .title-geng4d { font-size: 3.5rem; background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(4px 4px 0px #4d3300); margin-top: -10px; font-weight: 900; }
-        .angpau { width: 200px; height: 280px; background: var(--red-angpau); border-radius: 20px; border: 3px solid #ffd700; margin: 20px auto; display: flex; align-items: center; justify-content: center; animation: float 3s ease-in-out infinite; position: relative; box-shadow: 0 20px 50px rgba(255,0,0,0.4); }
-        .angpau-logo { width: 100px; height: 100px; border: 4px double #ffd700; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .input-box { width: 80%; background: rgba(0,0,0,0.8); border: 2px solid var(--neon); border-radius: 30px; padding: 12px; color: #fff; text-align: center; margin-top: 20px; outline: none; box-shadow: 0 0 10px var(--neon); text-transform: uppercase; font-weight: bold; }
-        .btn-buka { width: 180px; padding: 12px; margin-top: 20px; background: transparent; border: 2px solid var(--neon); color: var(--neon); font-weight: 900; border-radius: 50px; cursor: pointer; transition: 0.3s; box-shadow: 0 0 15px var(--neon); }
-        .btn-buka:hover { background: var(--neon); color: #000; }
+
+        .angpau-wrapper { position: relative; perspective: 1000px; margin-bottom: 30px; }
+        .angpau {
+            width: 220px;
+            height: 320px;
+            background: var(--red-angpau);
+            border-radius: 20px;
+            border: 3px solid #ffd700;
+            box-shadow: 0 20px 50px rgba(255,0,0,0.4), inset 0 0 20px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .coin-hang { position: absolute; top: -10px; right: 20px; width: 40px; height: 40px; background: var(--gold); border-radius: 50%; border: 2px solid #554000; box-shadow: 0 5px 15px rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; font-weight: bold; color: #4d3300; z-index: 5; }
+
+        .angpau-logo { width: 130px; height: 130px; border: 4px double #ffd700; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0,0,0,0.1); }
+        .chinese-char { font-size: 50px; color: #ffd700; margin-bottom: -10px; }
+        .text-4d { font-size: 25px; font-weight: 900; color: #ffd700; }
+
+        .gift-row { display: flex; gap: 15px; margin-top: -10px; z-index: 2; }
+        .gift { width: 50px; height: 50px; background: var(--gold); border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.8); position: relative; }
+        .gift::before { content: ''; position: absolute; width: 100%; height: 5px; background: red; top: 50%; left:0; }
+        .gift::after { content: ''; position: absolute; height: 100%; width: 5px; background: red; left: 50%; top:0; }
+
+        .input-box { width: 250px; background: rgba(0,0,0,0.8); border: 2px solid var(--neon-border); border-radius: 30px; padding: 10px 20px; color: #fff; text-align: center; margin-top: 40px; font-size: 1rem; outline: none; box-shadow: 0 0 10px var(--neon-border); text-transform: uppercase; font-weight: 700; }
+
+        .btn-buka { width: 180px; padding: 12px; margin-top: 20px; background: transparent; border: 2px solid var(--neon-border); color: var(--neon-border); font-weight: 900; letter-spacing: 2px; border-radius: 50px; cursor: pointer; text-shadow: 0 0 10px var(--neon-border); box-shadow: 0 0 15px var(--neon-border), inset 0 0 5px var(--neon-border); transition: 0.3s; }
+        .btn-buka:hover { background: var(--neon-border); color: #000; box-shadow: 0 0 40px var(--neon-border); }
+
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
     </style>
 </head>
 <body>
+
     <div class="stage">
-        <div class="title-mistery">MISTERY BOX</div>
-        <div class="title-geng4d">GENG4D</div>
-        <div class="angpau"><div class="angpau-logo"><div style="font-size:40px;color:#ffd700">庚</div><div style="font-weight:900;color:#ffd700">4D</div></div></div>
+        <div class="header-title">
+            <div class="title-mistery">MISTERY BOX</div>
+            <div class="title-geng4d">GENG4D</div>
+        </div>
+
+        <div class="angpau-wrapper">
+            <div class="coin-hang">¥</div>
+            <div class="angpau">
+                <div class="angpau-logo">
+                    <div class="chinese-char">庚</div>
+                    <div class="text-4d">4D</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="gift-row">
+            <div class="gift"></div>
+            <div class="gift" style="transform: scale(1.2);"></div>
+            <div class="gift"></div>
+        </div>
+
         <input type="text" class="input-box" id="kodeInput" placeholder="MASUKKAN KODE">
         <button class="btn-buka" onclick="claimReward()">BUKA SEKARANG</button>
     </div>
 
     <script>
+        // CONFIG FIREBASE (SUDAH DIPERBAIKI TANDA PETIKNYA)
         const firebaseConfig = {
             apiKey: "AIzaSyDZH--oPWAhe3JhrPdWiAkkAecZFjefhV0",
             projectId: "geng4d-mistery",
-            databaseURL: "https://geng4d-mistery-default-rtdb.asia-southeast1.firebasedatabase.app/
-        firebase.initializeApp(firebaseConfig);
+            databaseURL: "https://geng4d-mistery-default-rtdb.asia-southeast1.firebasedatabase.app"
+        };
+
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.database();
 
-        db.ref('settings/background').on('value', s => { 
-            if(s.val()) document.body.style.backgroundImage = `url('${s.val()}')`; 
+        // 1. Ambil Setting Background Otomatis
+        db.ref('settings/background').on('value', (s) => {
+            const bg = s.val();
+            if(bg && bg.trim() !== "") {
+                document.body.style.backgroundImage = `url('${bg}')`;
+            }
         });
 
+        // 2. Fungsi Klaim Hadiah
         function claimReward() {
-            const code = document.getElementById('kodeInput').value.toUpperCase().trim();
-            if(!code) return alert("Masukkan Kode!");
+            const inputVal = document.getElementById('kodeInput').value.toUpperCase().trim();
+            if (inputVal === "") return alert("Masukkan Kode!");
 
-            db.ref('settings/codes/' + code).once('value').then(snap => {
-                const data = snap.val();
-                if(!data) return alert("❌ KODE TIDAK VALID!");
-                if(data.used) return alert("❌ KODE SUDAH PERNAH DIGUNAKAN!");
+            db.ref('settings/codes/' + inputVal).once('value').then((snapshot) => {
+                const data = snapshot.val();
 
-                db.ref('settings/winrate').once('value').then(wrSnap => {
-                    const winrate = wrSnap.val() || 100;
-                    if(Math.floor(Math.random() * 100) + 1 <= winrate) {
-                        alert("🎉 SELAMAT! ANDA MENDAPATKAN: " + data.prize);
-                    } else {
-                        alert("💣 MAAF! BELUM BERUNTUNG, COBA LAGI!");
+                if (data) {
+                    if (data.used) {
+                        return alert("❌ MAAF, KODE SUDAH PERNAH DIGUNAKAN!");
                     }
-                    db.ref('settings/codes/' + code).update({ used: true });
-                });
+
+                    db.ref('settings/winrate').once('value').then((wrSnap) => {
+                        const wr = wrSnap.val() || 100;
+                        const random = Math.floor(Math.random() * 100) + 1;
+
+                        if (random <= wr) {
+                            alert("🎉 SELAMAT! ANDA MENDAPATKAN: " + data.prize);
+                        } else {
+                            alert("💣 MAAF! BELUM BERUNTUNG, COBA LAGI BESOK!");
+                        }
+
+                        // Matikan kode agar tidak bisa dipakai lagi
+                        db.ref('settings/codes/' + inputVal).update({ used: true });
+                    });
+
+                } else {
+                    alert("🚫 KODE TIDAK VALID ATAU SALAH!");
+                }
+            }).catch(error => {
+                alert("Koneksi Error! Cek internet kamu.");
             });
         }
     </script>
