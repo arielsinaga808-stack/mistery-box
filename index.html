@@ -1,135 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MISTERY BOX GENG4D</title>
+
+<style>
+body {
+  margin:0;
+  font-family: Arial;
+  background: radial-gradient(circle, #1a1a2e, #000);
+  color:#00f2ff;
+  text-align:center;
+}
+.box {
+  width:120px;height:120px;
+  background:purple;
+  display:inline-block;
+  margin:20px;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>MISTERY BOX GENG4D</h1>
+
+<div>
+  <div class="box" data-index="0"></div>
+  <div class="box" data-index="1"></div>
+  <div class="box" data-index="2"></div>
+</div>
+
+<input id="kodeInput" placeholder="Masukkan kode">
+<button id="openBtn">Buka</button>
+
+<div id="resultPopup" style="display:none;">
+  <h2 id="resultText"></h2>
+  <img id="resultImg" width="100">
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
 const firebaseConfig = {
-  apiKey: "AIzaSyDZH--oPWAhe3JhrPdWiAkkAecZFjefhV0",
+  apiKey: "AIzaSy...",
   authDomain: "geng4d-mistery.firebaseapp.com",
   databaseURL: "https://geng4d-mistery-default-rtdb.asia-southeast1.firebasedatabase.app/",
   projectId: "geng4d-mistery"
 };
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-const boxes = document.querySelectorAll('.box');
-const kodeInput = document.getElementById('kodeInput');
-const openBtn = document.getElementById('openBtn');
-const resultPopup = document.getElementById('resultPopup');
-const resultText = document.getElementById('resultText');
-const resultImg = document.getElementById('resultImg');
+const openBtn = document.getElementById("openBtn");
+const kodeInput = document.getElementById("kodeInput");
 
-let selectedBoxIndex = null;
+openBtn.onclick = () => {
+  const kode = kodeInput.value.toUpperCase();
 
-// SELECT BOX
-boxes.forEach(box => {
-  box.addEventListener('click', () => {
-    boxes.forEach(b => b.style.borderColor = '#00f2ff');
-    box.style.borderColor = '#ffff00';
-    selectedBoxIndex = box.dataset.index;
-  });
-});
-
-// 🎁 TAMPILKAN HADIAH
-function tampilkanHadiah(data) {
-  resultText.innerText = "Selamat! Kamu mendapatkan " + data.prize;
-
-  if (data.imageURL) {
-    resultImg.src = data.imageURL;
-    resultImg.style.display = "block";
-  } else {
-    resultImg.style.display = "none";
-  }
-
-  resultPopup.classList.add("show");
-}
-
-// 🎲 RANDOM WINRATE
-function getRandomReward(rewards) {
-  let total = rewards.reduce((sum, r) => sum + (r.winrate || 0), 0);
-  let rand = Math.random() * total;
-
-  for (let r of rewards) {
-    if (rand < r.winrate) return r;
-    rand -= r.winrate;
-  }
-}
-
-// 📊 SIMPAN LOG
-function simpanLog(kode, reward) {
-  db.ref("logs").push({
-    code: kode,
-    reward: reward,
-    time: new Date().toISOString()
-  });
-}
-
-// 🔑 UPDATE KODE
-function updateKode(kode, data) {
-  db.ref("codes/" + kode).update({
-    usedCount: (data.usedCount || 0) + 1
-  });
-}
-
-// 🎨 LOAD BACKGROUND DARI ADMIN
-db.ref("settings").on("value", snap => {
-  const data = snap.val();
-  if (data && data.background) {
-    document.body.style.background = data.background;
-  }
-});
-
-// 🚀 BUTTON BUKA (FULL SYSTEM)
-openBtn.onclick = function () {
-  const kode = kodeInput.value.trim().toUpperCase();
-
-  if (!kode) {
-    alert("Masukkan kode dulu!");
-    return;
-  }
-
-  db.ref("codes/" + kode).once("value", (snap) => {
+  db.ref("codes/" + kode).once("value", snap => {
     const data = snap.val();
 
-    if (!data) {
-      alert("Kode tidak ditemukan!");
-      return;
-    }
+    if (!data) return alert("Kode tidak ada");
 
-    if ((data.usedCount || 0) >= (data.maxUse || 1)) {
-      alert("Kode sudah habis digunakan!");
-      return;
-    }
-
-    // 🎁 FIXED REWARD
-    if (data.type === "fixed") {
-      tampilkanHadiah({
-        prize: data.fixed,
-        imageURL: data.imageURL || ""
-      });
-
-      simpanLog(kode, data.fixed);
-      updateKode(kode, data);
-      return;
-    }
-
-    // 🎲 RANDOM REWARD
-    db.ref("rewards").once("value", (snap) => {
-      const rewards = Object.values(snap.val() || {});
-      const reward = getRandomReward(rewards);
-
-      tampilkanHadiah({
-        prize: reward.name,
-        imageURL: reward.image
-      });
-
-      simpanLog(kode, reward.name);
-      updateKode(kode, data);
-    });
+    alert("Hadiah: " + data.prize);
   });
 };
-
-// klik popup untuk tutup
-resultPopup.addEventListener("click", () => {
-  resultPopup.classList.remove("show");
-});
 </script>
+
+</body>
+</html>
