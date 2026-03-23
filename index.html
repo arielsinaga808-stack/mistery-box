@@ -180,7 +180,6 @@ button:active { transform: scale(0.95); }
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
-<script>
 const firebaseConfig = {
   apiKey: "AIzaSyDZH--oPWAhe3JhrPdWiAkkAecZFjefhV0",
   authDomain: "geng4d-mistery.firebaseapp.com",
@@ -199,7 +198,7 @@ const resultImg = document.getElementById('resultImg');
 
 let selectedBoxIndex = null;
 
-// ✅ FIX SELECT BOX
+// SELECT BOX
 boxes.forEach(box => {
   box.addEventListener('click', () => {
     boxes.forEach(b => b.style.borderColor = '#00f2ff');
@@ -208,7 +207,7 @@ boxes.forEach(box => {
   });
 });
 
-// ✅ FUNCTION TAMPILKAN HADIAH + GAMBAR
+// TAMPILKAN HADIAH + GAMBAR
 function tampilkanHadiah(data) {
   resultText.innerText = "Selamat! Kamu mendapatkan " + data.prize;
 
@@ -222,7 +221,7 @@ function tampilkanHadiah(data) {
   resultPopup.classList.add("show");
 }
 
-// ✅ BUTTON BUKA KOTAK
+// BUTTON BUKA
 openBtn.onclick = function () {
   const kode = kodeInput.value.trim().toUpperCase();
 
@@ -244,15 +243,13 @@ openBtn.onclick = function () {
       return;
     }
 
-    // tampilkan hadiah + gambar
     tampilkanHadiah(data);
 
-    // tandai sudah digunakan
     db.ref("settings/codes/" + kode).update({ used: true });
   });
 };
 
-// OPTIONAL: klik popup untuk tutup
+// klik popup untuk tutup
 resultPopup.addEventListener("click", () => {
   resultPopup.classList.remove("show");
 });
