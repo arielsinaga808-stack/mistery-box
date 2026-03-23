@@ -6,19 +6,137 @@
 <title>MISTERY BOX GENG4D</title>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
 body {
   margin:0;
-  font-family: Arial;
-  background: radial-gradient(circle, #1a1a2e, #000);
+  font-family:'Orbitron', sans-serif;
+  background: radial-gradient(circle at center, #0f0c29, #000);
   color:#00f2ff;
   text-align:center;
+  overflow:hidden;
 }
+
+/* 🌌 Background glow */
+body::before {
+  content:"";
+  position:fixed;
+  width:100%;
+  height:100%;
+  background: radial-gradient(circle, #00f2ff22, transparent 70%);
+  animation: pulseBG 4s infinite;
+  z-index:-1;
+}
+
+@keyframes pulseBG {
+  0%,100% { opacity:0.3; }
+  50% { opacity:0.8; }
+}
+
+h1 {
+  margin-top:30px;
+  text-shadow:0 0 20px #00f2ff, 0 0 40px #00f2ff;
+}
+
+/* 🎁 BOX STYLE */
 .box {
-  width:120px;height:120px;
-  background:purple;
+  width:130px;
+  height:130px;
   display:inline-block;
   margin:20px;
+  border-radius:15px;
   cursor:pointer;
+  background:linear-gradient(145deg,#6a00ff,#a100ff);
+  border:3px solid #00f2ff;
+  box-shadow:0 0 20px #00f2ff, 0 0 40px #a100ff;
+  transition:0.3s;
+  position:relative;
+}
+
+.box::before {
+  content:"?";
+  font-size:70px;
+  color:white;
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  text-shadow:0 0 15px #ff00ff;
+}
+
+.box:hover {
+  transform:scale(1.1) rotate(5deg);
+  box-shadow:0 0 40px #00ffff, 0 0 80px #ff00ff;
+}
+
+/* 🎲 OPEN ANIMATION */
+.box.opening {
+  animation: shake 0.5s;
+}
+
+@keyframes shake {
+  0%{transform:translate(0)}
+  25%{transform:translate(5px)}
+  50%{transform:translate(-5px)}
+  75%{transform:translate(5px)}
+  100%{transform:translate(0)}
+}
+
+/* INPUT */
+input {
+  padding:12px;
+  border-radius:25px;
+  border:2px solid #00f2ff;
+  background:#000;
+  color:#00f2ff;
+  text-align:center;
+  margin-top:20px;
+  box-shadow:0 0 15px #00f2ff;
+}
+
+button {
+  padding:12px 25px;
+  margin-top:10px;
+  border:none;
+  border-radius:25px;
+  background:linear-gradient(45deg,#00f2ff,#a100ff);
+  color:white;
+  cursor:pointer;
+  box-shadow:0 0 20px #00f2ff;
+  transition:0.3s;
+}
+
+button:hover {
+  transform:scale(1.1);
+  box-shadow:0 0 40px #ff00ff;
+}
+
+/* 🎉 POPUP */
+#resultPopup {
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) scale(0);
+  background:#000;
+  padding:30px;
+  border-radius:15px;
+  border:2px solid #00f2ff;
+  box-shadow:0 0 40px #00f2ff;
+  transition:0.4s;
+}
+
+#resultPopup.show {
+  transform:translate(-50%,-50%) scale(1);
+}
+
+#resultPopup img {
+  margin-top:15px;
+  width:120px;
+  animation: zoom 0.4s;
+}
+
+@keyframes zoom {
+  from{transform:scale(0)}
+  to{transform:scale(1)}
 }
 </style>
 </head>
@@ -34,11 +152,12 @@ body {
 </div>
 
 <input id="kodeInput" placeholder="Masukkan kode">
-<button id="openBtn">Buka</button>
+<br>
+<button id="openBtn">Buka Kotak</button>
 
-<div id="resultPopup" style="display:none;">
+<div id="resultPopup">
   <h2 id="resultText"></h2>
-  <img id="resultImg" width="100">
+  <img id="resultImg">
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -55,19 +174,56 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+const boxes = document.querySelectorAll(".box");
 const openBtn = document.getElementById("openBtn");
 const kodeInput = document.getElementById("kodeInput");
 
-openBtn.onclick = () => {
-  const kode = kodeInput.value.toUpperCase();
+let selectedBox = null;
 
-  db.ref("codes/" + kode).once("value", snap => {
-    const data = snap.val();
+boxes.forEach(box=>{
+  box.onclick=()=>{
+    boxes.forEach(b=>b.style.borderColor="#00f2ff");
+    box.style.borderColor="#ffff00";
+    selectedBox = box;
+  }
+});
 
-    if (!data) return alert("Kode tidak ada");
+function showReward(text,img){
+  document.getElementById("resultText").innerText=text;
+  const image=document.getElementById("resultImg");
+  if(img){image.src=img; image.style.display="block";}
+  else image.style.display="none";
+  document.getElementById("resultPopup").classList.add("show");
+}
 
-    alert("Hadiah: " + data.prize);
-  });
+openBtn.onclick=()=>{
+  const kode=kodeInput.value.toUpperCase();
+
+  if(!selectedBox) return alert("Pilih box dulu!");
+  if(!kode) return alert("Masukkan kode!");
+
+  selectedBox.classList.add("opening");
+
+  setTimeout(()=>{
+    db.ref("codes/"+kode).once("value",snap=>{
+      const data=snap.val();
+
+      if(!data){
+        alert("Kode tidak ditemukan");
+        selectedBox.classList.remove("opening");
+        return;
+      }
+
+      showReward("Selamat! "+data.prize,data.imageURL);
+
+      db.ref("codes/"+kode).update({used:true});
+      selectedBox.classList.remove("opening");
+    });
+  },800);
+};
+
+document.getElementById("resultPopup").onclick=()=>{
+  document.getElementById("resultPopup").classList.remove("show");
 };
 </script>
 
