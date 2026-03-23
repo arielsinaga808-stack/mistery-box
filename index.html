@@ -7,7 +7,6 @@
 
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
-
   * { box-sizing: border-box; }
 
   body {
@@ -123,13 +122,13 @@
   button {
     padding: 12px 0;
     border-radius: 25px;
-    background: linear-gradient(45deg, #00f2ff, #6a00ff);
+    background: linear-gradient(45deg, #00f2ff, #a100ff);
     border: none;
     color: white;
     font-weight: 700;
     font-size: 1.1rem;
     cursor: pointer;
-    box-shadow: 0 0 15px #00f2ff, 0 0 30px #6a00ff;
+    box-shadow: 0 0 15px #00f2ff, 0 0 30px #a100ff;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
@@ -189,7 +188,7 @@ const resultImg = document.getElementById('resultImg');
 
 let selectedBoxIndex = null;
 
-// Highlight box
+// Highlight selected box
 boxes.forEach(box => {
   box.addEventListener('click', () => {
     boxes.forEach(b => b.style.borderColor = '#00f2ff');
@@ -229,7 +228,7 @@ openBtn.addEventListener('click', () => {
           let prize = data.prize;
           let imgSrc = data.imageURL || '';
 
-          // fallback berdasarkan kata kunci
+          // fallback jika admin belum upload gambar
           if(!imgSrc){
             const p = prize.toLowerCase();
             if(p.includes('brio')||p.includes('mobil')) imgSrc='https://cdn-icons-png.flaticon.com/512/743/743922.png';
@@ -268,7 +267,6 @@ openBtn.addEventListener('click', () => {
   });
 });
 
-// Reset box transform
 function resetBox(){
   if(selectedBoxIndex!==null){
     const box = boxes[selectedBoxIndex];
@@ -281,7 +279,7 @@ function resetBox(){
 resultPopup.addEventListener('click', ()=>{ resultPopup.classList.remove('show'); });
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') resultPopup.classList.remove('show'); });
 
-// --- Update background realtime ---
+// Update background realtime
 db.ref('settings/background').on('value', snapshot => {
   const bgUrl = snapshot.val();
   if(bgUrl){
