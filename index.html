@@ -180,6 +180,7 @@ button:active { transform: scale(0.95); }
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
+<script>
 const firebaseConfig = {
   apiKey: "AIzaSyDZH--oPWAhe3JhrPdWiAkkAecZFjefhV0",
   authDomain: "geng4d-mistery.firebaseapp.com",
@@ -198,16 +199,61 @@ const resultImg = document.getElementById('resultImg');
 
 let selectedBoxIndex = null;
 
-// Mapping hadiah ke gambar
-const hadiahImages = {
-  brio: 'https://asset.honda-indonesia.com/variants/images/evvlc7beasfv8s6scWRnF501NPW7SdYFwEXPmhoP.png',
-  zx10: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Kawasaki_Ninja_ZX-10R_%28crop_%26_shrink%29.png',
-  vespa: 'https://e7.pngegg.com/pngimages/292/965/png-clipart-piaggio-vespa-gts-vespa-sprint-vespa-primavera-yellow-vespa-scooter-motorcycle.png',
-  uang: 'https://w7.pngwing.com/pngs/842/455/png-transparent-fan-of-100000-indonesian-rupiah-banknotes-indonesian-rupiah-money-bank-mandiri-gift-credit-card-fly-together-miscellaneous-saving-payment-thumbnail.png'
-};
-
-// Highlight selected box
+// ✅ FIX SELECT BOX
 boxes.forEach(box => {
   box.addEventListener('click', () => {
     boxes.forEach(b => b.style.borderColor = '#00f2ff');
-    box.style.border
+    box.style.borderColor = '#ffff00';
+    selectedBoxIndex = box.dataset.index;
+  });
+});
+
+// ✅ FUNCTION TAMPILKAN HADIAH + GAMBAR
+function tampilkanHadiah(data) {
+  resultText.innerText = "Selamat! Kamu mendapatkan " + data.prize;
+
+  if (data.imageURL) {
+    resultImg.src = data.imageURL;
+    resultImg.style.display = "block";
+  } else {
+    resultImg.style.display = "none";
+  }
+
+  resultPopup.classList.add("show");
+}
+
+// ✅ BUTTON BUKA KOTAK
+openBtn.onclick = function () {
+  const kode = kodeInput.value.trim().toUpperCase();
+
+  if (!kode) {
+    alert("Masukkan kode dulu!");
+    return;
+  }
+
+  db.ref("settings/codes/" + kode).once("value", (snap) => {
+    const data = snap.val();
+
+    if (!data) {
+      alert("Kode tidak ditemukan!");
+      return;
+    }
+
+    if (data.used) {
+      alert("Kode sudah digunakan!");
+      return;
+    }
+
+    // tampilkan hadiah + gambar
+    tampilkanHadiah(data);
+
+    // tandai sudah digunakan
+    db.ref("settings/codes/" + kode).update({ used: true });
+  });
+};
+
+// OPTIONAL: klik popup untuk tutup
+resultPopup.addEventListener("click", () => {
+  resultPopup.classList.remove("show");
+});
+</script>
