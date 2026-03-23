@@ -8,9 +8,7 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
 
-  * {
-    box-sizing: border-box;
-  }
+  * { box-sizing: border-box; }
 
   body {
     margin: 0; padding: 0;
@@ -54,17 +52,12 @@
     transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .box:hover {
-    transform: rotateY(15deg) rotateX(15deg) scale(1.1);
-    box-shadow: 0 0 30px #ff00ff, 0 0 60px #00f2ff;
-  }
+  .box:hover { transform: rotateY(15deg) rotateX(15deg) scale(1.1);
+    box-shadow: 0 0 30px #ff00ff, 0 0 60px #00f2ff; }
 
-  .box:active {
-    transform: rotateY(0) rotateX(0) scale(0.95);
-    box-shadow: 0 0 40px #00ffff;
-  }
+  .box:active { transform: rotateY(0) rotateX(0) scale(0.95);
+    box-shadow: 0 0 40px #00ffff; }
 
-  /* Question mark */
   .box::before {
     content: "?";
     font-size: 80px;
@@ -82,7 +75,6 @@
     pointer-events: none;
   }
 
-  /* Result popup */
   #resultPopup {
     position: fixed;
     top: 50%;
@@ -100,9 +92,7 @@
     transition: transform 0.4s ease;
   }
 
-  #resultPopup.show {
-    transform: translate(-50%, -50%) scale(1);
-  }
+  #resultPopup.show { transform: translate(-50%, -50%) scale(1); }
 
   #resultPopup img {
     max-width: 100px;
@@ -110,7 +100,6 @@
     filter: drop-shadow(0 0 5px #00f2ff);
   }
 
-  /* Bottom controls */
   .controls {
     max-width: 350px;
     width: 100%;
@@ -140,36 +129,21 @@
     font-weight: 700;
     font-size: 1.1rem;
     cursor: pointer;
-    box-shadow:
-      0 0 15px #00f2ff,
-      0 0 30px #6a00ff;
+    box-shadow: 0 0 15px #00f2ff, 0 0 30px #6a00ff;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
   button:hover {
-    box-shadow:
-      0 0 25px #00ffff,
-      0 0 50px #aa00ff;
+    box-shadow: 0 0 25px #00ffff, 0 0 50px #aa00ff;
     transform: scale(1.05);
   }
 
-  button:active {
-    transform: scale(0.95);
-  }
+  button:active { transform: scale(0.95); }
 
-  /* Responsive */
   @media (max-width: 480px) {
-    .boxes-container {
-      gap: 20px;
-    }
-    .box {
-      width: 110px;
-      height: 110px;
-    }
-    #resultPopup {
-      font-size: 1.1rem;
-      padding: 15px 25px;
-    }
+    .boxes-container { gap: 20px; }
+    .box { width: 110px; height: 110px; }
+    #resultPopup { font-size: 1.1rem; padding: 15px 25px; }
   }
 </style>
 </head>
@@ -197,149 +171,125 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
-  // Firebase setup
-  const firebaseConfig = {
-    apiKey: "AIzaSyDZH--oPWAhe3JhrPdWiAkkAecZFjefhV0",
-    authDomain: "geng4d-mistery.firebaseapp.com",
-    databaseURL: "https://geng4d-mistery-default-rtdb.asia-southeast1.firebasedatabase.app/",
-    projectId: "geng4d-mistery"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+const firebaseConfig = {
+  apiKey: "AIzaSyDZH--oPWAhe3JhrPdWiAkkAecZFjefhV0",
+  authDomain: "geng4d-mistery.firebaseapp.com",
+  databaseURL: "https://geng4d-mistery-default-rtdb.asia-southeast1.firebasedatabase.app/",
+  projectId: "geng4d-mistery"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-  const boxes = document.querySelectorAll('.box');
-  const kodeInput = document.getElementById('kodeInput');
-  const openBtn = document.getElementById('openBtn');
-  const resultPopup = document.getElementById('resultPopup');
-  const resultText = document.getElementById('resultText');
-  const resultImg = document.getElementById('resultImg');
+const boxes = document.querySelectorAll('.box');
+const kodeInput = document.getElementById('kodeInput');
+const openBtn = document.getElementById('openBtn');
+const resultPopup = document.getElementById('resultPopup');
+const resultText = document.getElementById('resultText');
+const resultImg = document.getElementById('resultImg');
 
-  let selectedBoxIndex = null;
+let selectedBoxIndex = null;
 
-  // Highlight selected box
-  boxes.forEach(box => {
-    box.addEventListener('click', () => {
-      boxes.forEach(b => b.style.borderColor = '#00f2ff'); // reset
-      box.style.borderColor = '#ff00ff';
-      selectedBoxIndex = parseInt(box.dataset.index);
-    });
-
-    box.addEventListener('keydown', e => {
-      if(e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        box.click();
-      }
-    });
+// Highlight box
+boxes.forEach(box => {
+  box.addEventListener('click', () => {
+    boxes.forEach(b => b.style.borderColor = '#00f2ff');
+    box.style.borderColor = '#ff00ff';
+    selectedBoxIndex = parseInt(box.dataset.index);
   });
+  box.addEventListener('keydown', e => {
+    if(e.key==='Enter'||e.key===' ') { e.preventDefault(); box.click(); }
+  });
+});
 
-  // Open box handler
-  openBtn.addEventListener('click', () => {
-    if(selectedBoxIndex === null) {
-      alert('Pilih salah satu kotak misteri dulu!');
-      return;
-    }
-    const code = kodeInput.value.trim().toUpperCase();
-    if(!code) {
-      alert('Masukkan kode!');
-      return;
-    }
+// Open box
+openBtn.addEventListener('click', () => {
+  if(selectedBoxIndex===null){ alert('Pilih kotak dulu!'); return; }
+  const code = kodeInput.value.trim().toUpperCase();
+  if(!code){ alert('Masukkan kode!'); return; }
 
-    // Disable button & boxes during process
-    openBtn.disabled = true;
-    openBtn.textContent = 'Membuka...';
-    boxes.forEach(b => b.style.pointerEvents = 'none');
+  openBtn.disabled = true;
+  openBtn.textContent = 'Membuka...';
+  boxes.forEach(b => b.style.pointerEvents = 'none');
 
-    // Simulate 3D open animation (scale & rotate)
-    const box = boxes[selectedBoxIndex];
-    box.style.transition = 'transform 1s ease';
-    box.style.transform = 'rotateX(-120deg) scale(1.2)';
-    
-    // Query firebase for code & winrate
-    db.ref(`settings/codes/${code}`).once('value').then(snap => {
-      const data = snap.val();
-      if(!data) {
-        alert('Kode tidak valid!');
-        resetBox();
-        return;
-      }
-      if(data.used) {
-        alert('Kode sudah dipakai!');
-        resetBox();
-        return;
-      }
-      return db.ref('settings/winrate').once('value').then(wrSnap => {
-        const wr = wrSnap.val() || 100;
-        const rand = Math.floor(Math.random() * 100) + 1;
+  const box = boxes[selectedBoxIndex];
+  box.style.transition = 'transform 1s ease';
+  box.style.transform = 'rotateX(-120deg) scale(1.2)';
 
-        setTimeout(() => {
-          if(rand <= wr) {
-            let prize = data.prize.toLowerCase();
-            let imgSrc;
-            if(prize.includes('mobil')) imgSrc = 'https://cdn-icons-png.flaticon.com/512/743/743922.png';
-            else if(prize.includes('uang')) imgSrc = 'https://cdn-icons-png.flaticon.com/512/2331/2331941.png';
-            else imgSrc = 'https://cdn-icons-png.flaticon.com/512/1046/1046784.png';
+  db.ref(`settings/codes/${code}`).once('value').then(snap => {
+    const data = snap.val();
+    if(!data){ alert('Kode tidak valid!'); resetBox(); return; }
+    if(data.used){ alert('Kode sudah dipakai!'); resetBox(); return; }
 
-            resultText.textContent = `🎉 Selamat! Kamu menang: ${data.prize}`;
-            resultImg.src = imgSrc;
-            resultImg.alt = data.prize;
+    db.ref('settings/winrate').once('value').then(wrSnap => {
+      const wr = wrSnap.val() || 100;
+      const rand = Math.floor(Math.random()*100)+1;
 
-            // Mark code as used
-            db.ref(`settings/codes/${code}`).update({ used: true });
-          } else {
-            resultText.textContent = '💣 Maaf, kamu zonk!';
-            resultImg.src = '';
-            resultImg.alt = '';
+      setTimeout(() => {
+        if(rand<=wr){
+          let prize = data.prize;
+          let imgSrc = data.imageURL || '';
+
+          // fallback berdasarkan kata kunci
+          if(!imgSrc){
+            const p = prize.toLowerCase();
+            if(p.includes('brio')||p.includes('mobil')) imgSrc='https://cdn-icons-png.flaticon.com/512/743/743922.png';
+            else if(p.includes('zx10')||p.includes('motor')) imgSrc='https://cdn-icons-png.flaticon.com/512/1046/1046784.png';
+            else if(p.includes('vespa')||p.includes('sprint')) imgSrc='https://cdn-icons-png.flaticon.com/512/1046/1046784.png';
+            else if(p.includes('uang')) imgSrc='https://cdn-icons-png.flaticon.com/512/2331/2331941.png';
+            else imgSrc='https://cdn-icons-png.flaticon.com/512/1046/1046784.png';
           }
 
-          // Show result popup
-          resultPopup.classList.add('show');
-          // Reset box animation
-          resetBox();
-          openBtn.disabled = false;
-          openBtn.textContent = 'Buka Kotak';
-          boxes.forEach(b => b.style.pointerEvents = 'auto');
-        }, 1100);
-      });
-    }).catch(err => {
-      alert('Terjadi kesalahan jaringan!');
-      resetBox();
-      openBtn.disabled = false;
-      openBtn.textContent = 'Buka Kotak';
-      boxes.forEach(b => b.style.pointerEvents = 'auto');
+          resultText.textContent = `🎉 Selamat! Kamu menang: ${prize}`;
+          resultImg.src = imgSrc;
+          resultImg.alt = prize;
+
+          db.ref(`settings/codes/${code}`).update({ used:true });
+
+        } else {
+          resultText.textContent = '💣 Maaf, kamu zonk!';
+          resultImg.src = '';
+          resultImg.alt = '';
+        }
+
+        resultPopup.classList.add('show');
+        resetBox();
+        openBtn.disabled = false;
+        openBtn.textContent = 'Buka Kotak';
+        boxes.forEach(b => b.style.pointerEvents = 'auto');
+
+      }, 1100);
     });
+  }).catch(err => {
+    alert('Kesalahan jaringan!');
+    resetBox();
+    openBtn.disabled = false;
+    openBtn.textContent = 'Buka Kotak';
+    boxes.forEach(b => b.style.pointerEvents = 'auto');
   });
+});
 
-  // Reset box transform
-  function resetBox() {
-    if(selectedBoxIndex !== null) {
-      const box = boxes[selectedBoxIndex];
-      box.style.transition = 'transform 0.5s ease';
-      box.style.transform = 'rotateX(0deg) scale(1)';
-    }
+// Reset box transform
+function resetBox(){
+  if(selectedBoxIndex!==null){
+    const box = boxes[selectedBoxIndex];
+    box.style.transition='transform 0.5s ease';
+    box.style.transform='rotateX(0deg) scale(1)';
   }
+}
 
-  // Close result popup when clicking outside or after 4 seconds
-  resultPopup.addEventListener('click', () => {
-    resultPopup.classList.remove('show');
-  });
+// Close popup
+resultPopup.addEventListener('click', ()=>{ resultPopup.classList.remove('show'); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') resultPopup.classList.remove('show'); });
 
-  // Accessibility: close popup on ESC
-  document.addEventListener('keydown', e => {
-    if(e.key === 'Escape') {
-      resultPopup.classList.remove('show');
-    }
-  });
-
-  // --- Tambahan fitur update background realtime dari admin panel ---
-  db.ref('settings/background').on('value', snapshot => {
-    const bgUrl = snapshot.val();
-    if (bgUrl) {
-      document.body.style.background = `radial-gradient(circle at center, #1a1a2e 0%, #000 80%), url(${bgUrl}) center/cover no-repeat`;
-    } else {
-      document.body.style.background = 'radial-gradient(circle at center, #1a1a2e 0%, #000 80%)';
-    }
-  });
+// --- Update background realtime ---
+db.ref('settings/background').on('value', snapshot => {
+  const bgUrl = snapshot.val();
+  if(bgUrl){
+    document.body.style.background = `radial-gradient(circle at center, #1a1a2e 0%, #000 80%), url(${bgUrl}) center/cover no-repeat`;
+  } else {
+    document.body.style.background = 'radial-gradient(circle at center, #1a1a2e 0%, #000 80%)';
+  }
+});
 </script>
-
 </body>
 </html>
