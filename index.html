@@ -6,144 +6,154 @@
 <title>MISTERY BOX GENG4D</title>
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
-  * { box-sizing: border-box; }
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+* { box-sizing: border-box; }
 
-  body {
-    margin: 0; padding: 0;
-    font-family: 'Orbitron', sans-serif;
-    background: radial-gradient(circle at center, #1a1a2e 0%, #000 80%);
-    color: #00f2ff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    transition: background 0.5s ease;
-  }
+body {
+  margin: 0; padding: 0;
+  font-family: 'Orbitron', sans-serif;
+  background: radial-gradient(circle at center, #1a1a2e 0%, #000 80%);
+  color: #00f2ff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  transition: background 0.5s ease;
+}
 
-  h1 {
-    margin: 30px 0 15px;
-    font-size: 2.5rem;
-    letter-spacing: 3px;
-    text-shadow: 0 0 15px #00f2ff;
-    user-select: none;
-  }
+h1 {
+  margin: 30px 0 15px;
+  font-size: 2.5rem;
+  letter-spacing: 3px;
+  text-shadow: 0 0 15px #00f2ff;
+  user-select: none;
+}
 
-  .boxes-container {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    perspective: 1200px;
-    margin-bottom: 40px;
-  }
+.boxes-container {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  perspective: 1200px;
+  margin-bottom: 40px;
+}
 
-  .box {
-    width: 140px;
-    height: 140px;
-    background: linear-gradient(145deg, #6a00ff, #a100ff);
-    border: 4px solid #00f2ff;
-    border-radius: 15px;
-    box-shadow: 0 0 20px #6a00ff, 0 0 40px #00f2ff;
-    cursor: pointer;
-    user-select: none;
-    position: relative;
-    transform-style: preserve-3d;
-    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  }
+.box {
+  width: 140px;
+  height: 140px;
+  background: linear-gradient(145deg, #6a00ff, #a100ff);
+  border: 4px solid #00f2ff;
+  border-radius: 15px;
+  box-shadow: 0 0 20px #6a00ff, 0 0 40px #00f2ff;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
 
-  .box:hover { transform: rotateY(15deg) rotateX(15deg) scale(1.1);
-    box-shadow: 0 0 30px #ff00ff, 0 0 60px #00f2ff; }
+.box:hover {
+  transform: rotateY(15deg) rotateX(15deg) scale(1.1);
+  box-shadow: 0 0 30px #ff00ff, 0 0 60px #00f2ff;
+}
 
-  .box:active { transform: rotateY(0) rotateX(0) scale(0.95);
-    box-shadow: 0 0 40px #00ffff; }
+.box:active {
+  transform: rotateY(0) rotateX(0) scale(0.95);
+  box-shadow: 0 0 40px #00ffff;
+}
 
-  .box::before {
-    content: "?";
-    font-size: 80px;
-    font-weight: 900;
-    color: #fff;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-shadow:
-      0 0 8px #ff00ff,
-      0 0 20px #ff00ff,
-      0 0 30px #ff00ff,
-      0 0 40px #ff00ff;
-    pointer-events: none;
-  }
+.box::before {
+  content: "?";
+  font-size: 80px;
+  font-weight: 900;
+  color: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-shadow:
+    0 0 8px #ff00ff,
+    0 0 20px #ff00ff,
+    0 0 30px #ff00ff,
+    0 0 40px #ff00ff;
+  pointer-events: none;
+}
 
-  #resultPopup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    background: #110022cc;
-    padding: 25px 40px;
-    border-radius: 15px;
-    border: 2px solid #00f2ff;
-    box-shadow: 0 0 30px #00f2ff;
-    color: white;
-    font-size: 1.4rem;
-    text-align: center;
-    z-index: 999;
-    transition: transform 0.4s ease;
-  }
+#resultPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: #110022cc;
+  padding: 25px 40px;
+  border-radius: 15px;
+  border: 2px solid #00f2ff;
+  box-shadow: 0 0 30px #00f2ff;
+  color: white;
+  font-size: 1.4rem;
+  text-align: center;
+  z-index: 999;
+  transition: transform 0.4s ease;
+}
 
-  #resultPopup.show { transform: translate(-50%, -50%) scale(1); }
+#resultPopup.show { transform: translate(-50%, -50%) scale(1); }
 
-  #resultPopup img {
-    max-width: 100px;
-    margin-top: 15px;
-    filter: drop-shadow(0 0 5px #00f2ff);
-  }
+#resultPopup img {
+  max-width: 140px;
+  margin-top: 15px;
+  filter: drop-shadow(0 0 5px #00f2ff);
+  animation: zoomIn 0.4s ease;
+}
 
-  .controls {
-    max-width: 350px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+@keyframes zoomIn {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
 
-  input[type="text"] {
-    padding: 12px 15px;
-    border-radius: 25px;
-    border: 2px solid #00f2ff;
-    background: #000011;
-    color: #00f2ff;
-    font-size: 1rem;
-    outline: none;
-    box-shadow: 0 0 15px #00f2ff55;
-    text-align: center;
-  }
+.controls {
+  max-width: 350px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-  button {
-    padding: 12px 0;
-    border-radius: 25px;
-    background: linear-gradient(45deg, #00f2ff, #a100ff);
-    border: none;
-    color: white;
-    font-weight: 700;
-    font-size: 1.1rem;
-    cursor: pointer;
-    box-shadow: 0 0 15px #00f2ff, 0 0 30px #a100ff;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
+input[type="text"] {
+  padding: 12px 15px;
+  border-radius: 25px;
+  border: 2px solid #00f2ff;
+  background: #000011;
+  color: #00f2ff;
+  font-size: 1rem;
+  outline: none;
+  box-shadow: 0 0 15px #00f2ff55;
+  text-align: center;
+}
 
-  button:hover {
-    box-shadow: 0 0 25px #00ffff, 0 0 50px #aa00ff;
-    transform: scale(1.05);
-  }
+button {
+  padding: 12px 0;
+  border-radius: 25px;
+  background: linear-gradient(45deg, #00f2ff, #a100ff);
+  border: none;
+  color: white;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 0 15px #00f2ff, 0 0 30px #a100ff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
-  button:active { transform: scale(0.95); }
+button:hover {
+  box-shadow: 0 0 25px #00ffff, 0 0 50px #aa00ff;
+  transform: scale(1.05);
+}
 
-  @media (max-width: 480px) {
-    .boxes-container { gap: 20px; }
-    .box { width: 110px; height: 110px; }
-    #resultPopup { font-size: 1.1rem; padding: 15px 25px; }
-  }
+button:active { transform: scale(0.95); }
+
+@media (max-width: 480px) {
+  .boxes-container { gap: 20px; }
+  .box { width: 110px; height: 110px; }
+  #resultPopup { font-size: 1.1rem; padding: 15px 25px; }
+}
 </style>
 </head>
 <body>
@@ -188,106 +198,16 @@ const resultImg = document.getElementById('resultImg');
 
 let selectedBoxIndex = null;
 
+// Mapping hadiah ke gambar
+const hadiahImages = {
+  brio: 'https://asset.honda-indonesia.com/variants/images/evvlc7beasfv8s6scWRnF501NPW7SdYFwEXPmhoP.png',
+  zx10: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Kawasaki_Ninja_ZX-10R_%28crop_%26_shrink%29.png',
+  vespa: 'https://e7.pngegg.com/pngimages/292/965/png-clipart-piaggio-vespa-gts-vespa-sprint-vespa-primavera-yellow-vespa-scooter-motorcycle.png',
+  uang: 'https://w7.pngwing.com/pngs/842/455/png-transparent-fan-of-100000-indonesian-rupiah-banknotes-indonesian-rupiah-money-bank-mandiri-gift-credit-card-fly-together-miscellaneous-saving-payment-thumbnail.png'
+};
+
 // Highlight selected box
 boxes.forEach(box => {
   box.addEventListener('click', () => {
     boxes.forEach(b => b.style.borderColor = '#00f2ff');
-    box.style.borderColor = '#ff00ff';
-    selectedBoxIndex = parseInt(box.dataset.index);
-  });
-  box.addEventListener('keydown', e => {
-    if(e.key==='Enter'||e.key===' ') { e.preventDefault(); box.click(); }
-  });
-});
-
-// Open box
-openBtn.addEventListener('click', () => {
-  if(selectedBoxIndex===null){ alert('Pilih kotak dulu!'); return; }
-  const code = kodeInput.value.trim().toUpperCase();
-  if(!code){ alert('Masukkan kode!'); return; }
-
-  openBtn.disabled = true;
-  openBtn.textContent = 'Membuka...';
-  boxes.forEach(b => b.style.pointerEvents = 'none');
-
-  const box = boxes[selectedBoxIndex];
-  box.style.transition = 'transform 1s ease';
-  box.style.transform = 'rotateX(-120deg) scale(1.2)';
-
-  db.ref(`settings/codes/${code}`).once('value').then(snap => {
-    const data = snap.val();
-    if(!data){ alert('Kode tidak valid!'); resetBox(); return; }
-    if(data.used){ alert('Kode sudah dipakai!'); resetBox(); return; }
-
-    db.ref('settings/winrate').once('value').then(wrSnap => {
-      const wr = wrSnap.val() || 100;
-      const rand = Math.floor(Math.random()*100)+1;
-
-      setTimeout(() => {
-        if(rand<=wr){
-          let prize = data.prize;
-          let imgSrc = data.imageURL || '';
-
-          // fallback jika admin belum upload gambar
-          if(!imgSrc){
-            const p = prize.toLowerCase();
-            if(p.includes('brio')||p.includes('mobil')) imgSrc='https://asset.honda-indonesia.com/variants/images/evvlc7beasfv8s6scWRnF501NPW7SdYFwEXPmhoP.png';
-            else if(p.includes('zx10')||p.includes('motor')) imgSrc='https://upload.wikimedia.org/wikipedia/commons/a/ac/Kawasaki_Ninja_ZX-10R_%28crop_%26_shrink%29.png';
-            else if(p.includes('vespa')||p.includes('sprint')) imgSrc='https://e7.pngegg.com/pngimages/292/965/png-clipart-piaggio-vespa-gts-vespa-sprint-vespa-primavera-yellow-vespa-scooter-motorcycle.png';
-            else if(p.includes('uang')) imgSrc='https://w7.pngwing.com/pngs/842/455/png-transparent-fan-of-100000-indonesian-rupiah-banknotes-indonesian-rupiah-money-bank-mandiri-gift-credit-card-fly-together-miscellaneous-saving-payment-thumbnail.png';
-            else imgSrc='https://cdn-icons-png.flaticon.com/512/1046/1046784.png';
-          }
-
-          resultText.textContent = `🎉 Selamat! Kamu menang: ${prize}`;
-          resultImg.src = imgSrc;
-          resultImg.alt = prize;
-
-          db.ref(`settings/codes/${code}`).update({ used:true });
-
-        } else {
-          resultText.textContent = '💣 Maaf, kamu zonk!';
-          resultImg.src = '';
-          resultImg.alt = '';
-        }
-
-        resultPopup.classList.add('show');
-        resetBox();
-        openBtn.disabled = false;
-        openBtn.textContent = 'Buka Kotak';
-        boxes.forEach(b => b.style.pointerEvents = 'auto');
-
-      }, 1100);
-    });
-  }).catch(err => {
-    alert('Kesalahan jaringan!');
-    resetBox();
-    openBtn.disabled = false;
-    openBtn.textContent = 'Buka Kotak';
-    boxes.forEach(b => b.style.pointerEvents = 'auto');
-  });
-});
-
-function resetBox(){
-  if(selectedBoxIndex!==null){
-    const box = boxes[selectedBoxIndex];
-    box.style.transition='transform 0.5s ease';
-    box.style.transform='rotateX(0deg) scale(1)';
-  }
-}
-
-// Close popup
-resultPopup.addEventListener('click', ()=>{ resultPopup.classList.remove('show'); });
-document.addEventListener('keydown', e=>{ if(e.key==='Escape') resultPopup.classList.remove('show'); });
-
-// Update background realtime
-db.ref('settings/background').on('value', snapshot => {
-  const bgUrl = snapshot.val();
-  if(bgUrl){
-    document.body.style.background = `radial-gradient(circle at center, #1a1a2e 0%, #000 80%), url(${bgUrl}) center/cover no-repeat`;
-  } else {
-    document.body.style.background = 'radial-gradient(circle at center, #1a1a2e 0%, #000 80%)';
-  }
-});
-</script>
-</body>
-</html>
+    box.style.border
