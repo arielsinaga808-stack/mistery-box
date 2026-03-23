@@ -1,181 +1,3 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>MISTERY BOX GENG4D</title>
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
-* { box-sizing: border-box; }
-
-body {
-  margin: 0; padding: 0;
-  font-family: 'Orbitron', sans-serif;
-  background: radial-gradient(circle at center, #1a1a2e 0%, #000 80%);
-  color: #00f2ff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  transition: background 0.5s ease;
-}
-
-h1 {
-  margin: 30px 0 15px;
-  font-size: 2.5rem;
-  letter-spacing: 3px;
-  text-shadow: 0 0 15px #00f2ff;
-  user-select: none;
-}
-
-.boxes-container {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  perspective: 1200px;
-  margin-bottom: 40px;
-}
-
-.box {
-  width: 140px;
-  height: 140px;
-  background: linear-gradient(145deg, #6a00ff, #a100ff);
-  border: 4px solid #00f2ff;
-  border-radius: 15px;
-  box-shadow: 0 0 20px #6a00ff, 0 0 40px #00f2ff;
-  cursor: pointer;
-  user-select: none;
-  position: relative;
-  transform-style: preserve-3d;
-  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.box:hover {
-  transform: rotateY(15deg) rotateX(15deg) scale(1.1);
-  box-shadow: 0 0 30px #ff00ff, 0 0 60px #00f2ff;
-}
-
-.box:active {
-  transform: rotateY(0) rotateX(0) scale(0.95);
-  box-shadow: 0 0 40px #00ffff;
-}
-
-.box::before {
-  content: "?";
-  font-size: 80px;
-  font-weight: 900;
-  color: #fff;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-shadow:
-    0 0 8px #ff00ff,
-    0 0 20px #ff00ff,
-    0 0 30px #ff00ff,
-    0 0 40px #ff00ff;
-  pointer-events: none;
-}
-
-#resultPopup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  background: #110022cc;
-  padding: 25px 40px;
-  border-radius: 15px;
-  border: 2px solid #00f2ff;
-  box-shadow: 0 0 30px #00f2ff;
-  color: white;
-  font-size: 1.4rem;
-  text-align: center;
-  z-index: 999;
-  transition: transform 0.4s ease;
-}
-
-#resultPopup.show { transform: translate(-50%, -50%) scale(1); }
-
-#resultPopup img {
-  max-width: 140px;
-  margin-top: 15px;
-  filter: drop-shadow(0 0 5px #00f2ff);
-  animation: zoomIn 0.4s ease;
-}
-
-@keyframes zoomIn {
-  from { transform: scale(0); }
-  to { transform: scale(1); }
-}
-
-.controls {
-  max-width: 350px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-input[type="text"] {
-  padding: 12px 15px;
-  border-radius: 25px;
-  border: 2px solid #00f2ff;
-  background: #000011;
-  color: #00f2ff;
-  font-size: 1rem;
-  outline: none;
-  box-shadow: 0 0 15px #00f2ff55;
-  text-align: center;
-}
-
-button {
-  padding: 12px 0;
-  border-radius: 25px;
-  background: linear-gradient(45deg, #00f2ff, #a100ff);
-  border: none;
-  color: white;
-  font-weight: 700;
-  font-size: 1.1rem;
-  cursor: pointer;
-  box-shadow: 0 0 15px #00f2ff, 0 0 30px #a100ff;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-button:hover {
-  box-shadow: 0 0 25px #00ffff, 0 0 50px #aa00ff;
-  transform: scale(1.05);
-}
-
-button:active { transform: scale(0.95); }
-
-@media (max-width: 480px) {
-  .boxes-container { gap: 20px; }
-  .box { width: 110px; height: 110px; }
-  #resultPopup { font-size: 1.1rem; padding: 15px 25px; }
-}
-</style>
-</head>
-<body>
-
-<h1>MISTERY BOX GENG4D</h1>
-
-<div class="boxes-container" role="list" aria-label="Pilih Kotak Misteri">
-  <div class="box" data-index="0" tabindex="0" role="button" aria-pressed="false" aria-label="Kotak misteri nomor 1"></div>
-  <div class="box" data-index="1" tabindex="0" role="button" aria-pressed="false" aria-label="Kotak misteri nomor 2"></div>
-  <div class="box" data-index="2" tabindex="0" role="button" aria-pressed="false" aria-label="Kotak misteri nomor 3"></div>
-</div>
-
-<div class="controls">
-  <input type="text" id="kodeInput" placeholder="Masukkan Kode" aria-label="Masukkan kode mistery box" />
-  <button id="openBtn">Buka Kotak</button>
-</div>
-
-<div id="resultPopup" role="alert" aria-live="assertive">
-  <div id="resultText"></div>
-  <img id="resultImg" alt="" />
-</div>
-
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
@@ -207,7 +29,7 @@ boxes.forEach(box => {
   });
 });
 
-// TAMPILKAN HADIAH + GAMBAR
+// 🎁 TAMPILKAN HADIAH
 function tampilkanHadiah(data) {
   resultText.innerText = "Selamat! Kamu mendapatkan " + data.prize;
 
@@ -221,7 +43,42 @@ function tampilkanHadiah(data) {
   resultPopup.classList.add("show");
 }
 
-// BUTTON BUKA
+// 🎲 RANDOM WINRATE
+function getRandomReward(rewards) {
+  let total = rewards.reduce((sum, r) => sum + (r.winrate || 0), 0);
+  let rand = Math.random() * total;
+
+  for (let r of rewards) {
+    if (rand < r.winrate) return r;
+    rand -= r.winrate;
+  }
+}
+
+// 📊 SIMPAN LOG
+function simpanLog(kode, reward) {
+  db.ref("logs").push({
+    code: kode,
+    reward: reward,
+    time: new Date().toISOString()
+  });
+}
+
+// 🔑 UPDATE KODE
+function updateKode(kode, data) {
+  db.ref("codes/" + kode).update({
+    usedCount: (data.usedCount || 0) + 1
+  });
+}
+
+// 🎨 LOAD BACKGROUND DARI ADMIN
+db.ref("settings").on("value", snap => {
+  const data = snap.val();
+  if (data && data.background) {
+    document.body.style.background = data.background;
+  }
+});
+
+// 🚀 BUTTON BUKA (FULL SYSTEM)
 openBtn.onclick = function () {
   const kode = kodeInput.value.trim().toUpperCase();
 
@@ -230,7 +87,7 @@ openBtn.onclick = function () {
     return;
   }
 
-  db.ref("settings/codes/" + kode).once("value", (snap) => {
+  db.ref("codes/" + kode).once("value", (snap) => {
     const data = snap.val();
 
     if (!data) {
@@ -238,14 +95,36 @@ openBtn.onclick = function () {
       return;
     }
 
-    if (data.used) {
-      alert("Kode sudah digunakan!");
+    if ((data.usedCount || 0) >= (data.maxUse || 1)) {
+      alert("Kode sudah habis digunakan!");
       return;
     }
 
-    tampilkanHadiah(data);
+    // 🎁 FIXED REWARD
+    if (data.type === "fixed") {
+      tampilkanHadiah({
+        prize: data.fixed,
+        imageURL: data.imageURL || ""
+      });
 
-    db.ref("settings/codes/" + kode).update({ used: true });
+      simpanLog(kode, data.fixed);
+      updateKode(kode, data);
+      return;
+    }
+
+    // 🎲 RANDOM REWARD
+    db.ref("rewards").once("value", (snap) => {
+      const rewards = Object.values(snap.val() || {});
+      const reward = getRandomReward(rewards);
+
+      tampilkanHadiah({
+        prize: reward.name,
+        imageURL: reward.image
+      });
+
+      simpanLog(kode, reward.name);
+      updateKode(kode, data);
+    });
   });
 };
 
