@@ -17,7 +17,6 @@ body {
   overflow:hidden;
 }
 
-/* 🌌 Background glow */
 body::before {
   content:"";
   position:fixed;
@@ -38,7 +37,6 @@ h1 {
   text-shadow:0 0 20px #00f2ff, 0 0 40px #00f2ff;
 }
 
-/* 🎁 BOX STYLE */
 .box {
   width:130px;
   height:130px;
@@ -68,7 +66,6 @@ h1 {
   box-shadow:0 0 40px #00ffff, 0 0 80px #ff00ff;
 }
 
-/* 🎲 OPEN ANIMATION */
 .box.opening {
   animation: shake 0.5s;
 }
@@ -81,7 +78,6 @@ h1 {
   100%{transform:translate(0)}
 }
 
-/* INPUT */
 input {
   padding:12px;
   border-radius:25px;
@@ -110,7 +106,6 @@ button:hover {
   box-shadow:0 0 40px #ff00ff;
 }
 
-/* 🎉 POPUP */
 #resultPopup {
   position:fixed;
   top:50%;
@@ -195,35 +190,55 @@ boxes.forEach(box=>{
 function showReward(text,img){
   document.getElementById("resultText").innerText=text;
   const image=document.getElementById("resultImg");
-  if(img){image.src=img; image.style.display="block";}
-  else image.style.display="none";
+  if(img){
+    image.src=img; 
+    image.style.display="block";
+  } else {
+    image.style.display="none";
+  }
   document.getElementById("resultPopup").classList.add("show");
 }
 
-openBtn.onclick=()=>{
-  const kode=kodeInput.value.toUpperCase();
+// 🔥 FIXED VERSION (ANTI DOUBLE CLAIM)
+openBtn.onclick = async () => {
+  const kode = kodeInput.value.toUpperCase().trim();
 
-  if(!selectedBox) return alert("Pilih box dulu!");
-  if(!kode) return alert("Masukkan kode!");
+  if (!selectedBox) return alert("Pilih box dulu!");
+  if (!kode) return alert("Masukkan kode!");
 
+  openBtn.disabled = true;
   selectedBox.classList.add("opening");
 
-  setTimeout(()=>{
-    db.ref("codes/"+kode).once("value",snap=>{
-      const data=snap.val();
+  try {
+    const ref = db.ref("codes/" + kode);
 
-      if(!data){
-        alert("Kode tidak ditemukan");
-        selectedBox.classList.remove("opening");
-        return;
-      }
+    const result = await ref.transaction((data) => {
+      if (data === null) return;
+      if (data.used === true) return;
 
-      showReward("Selamat! "+data.prize,data.imageURL);
-
-      db.ref("codes/"+kode).update({used:true});
-      selectedBox.classList.remove("opening");
+      data.used = true;
+      data.usedAt = Date.now();
+      return data;
     });
-  },800);
+
+    if (!result.committed) {
+      alert("Kode tidak valid / sudah digunakan!");
+      selectedBox.classList.remove("opening");
+      openBtn.disabled = false;
+      return;
+    }
+
+    const data = result.snapshot.val();
+
+    showReward("Selamat! " + data.prize, data.imageURL);
+
+  } catch (err) {
+    console.error(err);
+    alert("Terjadi error!");
+  }
+
+  selectedBox.classList.remove("opening");
+  openBtn.disabled = false;
 };
 
 document.getElementById("resultPopup").onclick=()=>{
