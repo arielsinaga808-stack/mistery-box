@@ -160,18 +160,20 @@ button:hover {
 
 <script>
 const firebaseConfig = {
-  apiKey: "AIzaSyDZH--oPWAhe3JhrPdWiAkkAecZFjefhV0",
-  authDomain: "geng4d-mistery.firebaseapp.com",
-  databaseURL: "https://geng4d-mistery-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "geng4d-mistery",
-  storageBucket: "geng4d-mistery.firebasestorage.app",
-  messagingSenderId: "1084140719254",
-  appId: "1:1084140719254:web:88c9ee556a5cdc63f606b7",
-  measurementId: "G-8RZRY6TBRW"
+  apiKey: "ISI_API_KEY_KAMU",
+  authDomain: "ISI_PROJECT.firebaseapp.com",
+  databaseURL: "ISI_DATABASE_URL"
 };
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+
+// 🔥 DEVICE ID
+let device = localStorage.getItem("device");
+if(!device){
+  device = "DEV-" + Math.random().toString(36).substr(2,9);
+  localStorage.setItem("device", device);
+}
 
 const boxes = document.querySelectorAll(".box");
 const openBtn = document.getElementById("openBtn");
@@ -190,24 +192,29 @@ boxes.forEach(box=>{
 function showReward(text,img){
   document.getElementById("resultText").innerText=text;
   const image=document.getElementById("resultImg");
-  if(img){
-    image.src=img; 
-    image.style.display="block";
-  } else {
-    image.style.display="none";
-  }
+  if(img){image.src=img; image.style.display="block";}
+  else image.style.display="none";
   document.getElementById("resultPopup").classList.add("show");
 }
 
-// 🔥 FIXED VERSION (ANTI DOUBLE CLAIM)
+// 🔥 SYSTEM FINAL
 openBtn.onclick = async () => {
+
+  // 🤖 ANTI BOT
+  if(!window.lastClick) window.lastClick = 0;
+  if(Date.now() - window.lastClick < 3000){
+    alert("Terlalu cepat!");
+    return;
+  }
+  window.lastClick = Date.now();
+
   const kode = kodeInput.value.toUpperCase().trim();
 
-  if (!selectedBox) return alert("Pilih box dulu!");
-  if (!kode) return alert("Masukkan kode!");
+  if(!selectedBox) return alert("Pilih box dulu!");
+  if(!kode) return alert("Masukkan kode!");
 
-  openBtn.disabled = true;
   selectedBox.classList.add("opening");
+  openBtn.disabled = true;
 
   try {
     const ref = db.ref("codes/" + kode);
@@ -232,8 +239,15 @@ openBtn.onclick = async () => {
 
     showReward("Selamat! " + data.prize, data.imageURL);
 
+    // 📊 HISTORI
+    db.ref("claims").push({
+      code: kode,
+      prize: data.prize,
+      time: new Date().toLocaleString(),
+      device: device
+    });
+
   } catch (err) {
-    console.error(err);
     alert("Terjadi error!");
   }
 
